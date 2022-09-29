@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="wishlist">			
+
+	<insert id="insertWishlist" parameterClass="wishVO">
+		insert into wishlist (lecture_id, mem_mail) 
+								values (#lectureId#, #memMail#)
+								
+	</insert>
+		
+	<delete id="deleteWishlist" parameterClass="int">
+		delete from wishlist where qna_no=#qnaNo#
+    </delete>
+
+	<resultMap id="qnaMap" class="wishVO">
+		<result property="lectureId" 	column="lecture_id" />
+		<result property="memMail" 		column="mem_mail" />
+	</resultMap>
+	
+	<select id="getWishlistAll" resultMap="qnaMap">
+		select * from wishlist 
+	</select>
+	
+	<select id="getWishlist" parameterClass="int" resultMap="qnaMap">
+		select * from wishlist where qna_no = #qnaNo#
+	</select>
+	
+	
+
+</sqlMap>			
+
+
+
+
+

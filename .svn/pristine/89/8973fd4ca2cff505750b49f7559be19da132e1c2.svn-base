@@ -1,0 +1,60 @@
+<%@page import="lecture.vo.LectureVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	List<LectureVO> lecList = (List<LectureVO>)request.getAttribute("lecList");
+
+
+	String msg = session.getAttribute("msg") == null ? ""
+			: (String) session.getAttribute("msg");
+	session.removeAttribute("msg"); // 꺼내온 메세지 속성 제거하기
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>강의목록</title>
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+	<table border="1">
+		<tr>
+			<th>ID</th>
+			<th>제목</th>
+			<th>강의소개</th>
+		</tr>
+	<%
+		int lecSize = lecList.size();
+		if(lecSize > 0) {
+			for(int i = 0; i < lecSize; i++) {
+	%>	
+		<tr>
+			<td><%=lecList.get(i).getLecId() %></td>
+			<td><a href="detail.do?lecId=<%=lecList.get(i).getLecId() %>"><%=lecList.get(i).getLecTitle() %></a></td>
+			<td><%=lecList.get(i).getLecIntro() %></td>
+			<td><%=lecList.get(i).getAtchFileId() %></td>
+		</tr>
+	<%
+			}
+		}else {	
+	%>	
+		<tr>
+			<td colspan="4">강의정보가 없습니다.</td>
+		</tr>
+	<%  } %>
+	
+	<tr align="center">
+		<td colspan="4"><a href="insert.do">[강의 등록]</a></td>
+	</tr>
+
+	</table>
+	
+	<% if(msg.equals("성공")) { %>
+		<script>
+			alert('정상적으로 처리되었습니다.');
+		</script>
+	<%} %>
+<%@ include file="../footer.jsp" %>	
+</body>
+</html>

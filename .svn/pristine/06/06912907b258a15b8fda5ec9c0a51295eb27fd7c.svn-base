@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="qna">			
+
+	<insert id="insertQna" parameterClass="qnaVO">
+		insert into qna (qna_no,
+						lecture_id,
+						mem_mail,
+						qna_date,
+						qna_title,
+						qna_content) 
+		values (qna_num_seq.nextval, #lectureId#, #memMail#, sysdate, #qnaTitle#, #qnaContent#)
+	</insert>
+	
+	<update id="updateQna" parameterClass="qnaVO">
+		update qna set qna_title=#qnaTitle#, qna_content=#qnaContent# where qna_No=#qnaNo#
+	</update>
+	
+	<delete id="deleteQna" parameterClass="int">
+		delete from qna where qna_no=#qnaNo#
+    </delete>
+
+	<resultMap id="qnaMap" class="qnaVO">
+		<result property="qnaNo" 		column="qna_no" />
+		<result property="lectureId" 	column="lecture_id" />
+		<result property="memMail" 		column="mem_mail" />
+		<result property="qnaDate" 		column="qna_date" />
+		<result property="qnaTitle" 	column="qna_title" />
+		<result property="qnaContent" 	column="qna_content" />
+	</resultMap>
+	
+	<select id="getQnaAll" resultMap="qnaMap">
+		select * from qna order by 1 desc
+	</select>
+	
+	<select id="getQna" parameterClass="int" resultMap="qnaMap">
+		select * from qna where qna_no = #qnaNo#
+	</select>
+		
+	<select id="searchQna" parameterClass="String" resultMap="qnaMap">
+		select * from qna where qna_title like '%' || #qnaTitle# || '%'
+							or qna_content like '%' || #qnaTitle# || '%'
+	</select>
+	
+	
+
+</sqlMap>			
+
+
+
+
+

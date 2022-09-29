@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="orders">
+<insert id="insertOrder" parameterClass="pay.vo.OrderVO">
+
+	insert into ORDERS (ORDER_ID,ORDER_DATE,ORDER_PRICE,MEM_MAIL)
+	values (ORDER_ID_SEQ.NEXTVAL,SYSDATE,#orderPrice#,#memMail#)
+
+	<selectKey keyProperty="orderId" resultClass="String">
+		SELECT order_id
+		  FROM (Select order_id from orders order by 1 desc)
+		 WHERE ROWNUM = 1
+	</selectKey>
+</insert>
+
+<resultMap class="OrderVO" id="orderMap">
+
+	<result property="orderId" column="ORDER_ID"/>
+	<result property="orderDate" column="ORDER_DATE"/>
+	<result property="orderPrice" column="ORDER_PRICE"/>
+	<result property="memMail" column="MEM_MAIL"/>
+	
+</resultMap>
+
+<update id="updateOrder" parameterClass="OrderVO">
+	update ORDERS
+	set ORDER_DATE=SYSDATE,
+	    ORDER_PRICE=#orderPrice#,
+	    MEM_MAIL=#memMail#
+		where ORDER_ID=#orderId#
+</update>
+
+<delete id="deleteMember" parameterClass="String">
+	
+	delete from ORDERS
+	where ORDER_ID = #orderId#
+	
+</delete>
+
+<select id="getOrderAll" resultMap="orderMap">
+	select  *
+	from ORDERS
+</select>
+
+<select id="getOrder" parameterClass="String" resultMap="orderMap"> 
+	select *
+	from ORDERS
+	where ORDER_ID = #orderId#
+</select>
+
+<select id="checkOrder" parameterClass="String" resultClass="int">
+	select count(*) as cnt
+	from ORDERS
+	where ORDER_ID = #orderId#
+</select>
+
+<select id="searchOrder" parameterClass="OrderVO" resultMap="orderMap">
+
+	select * from ORDERS where 1=1 
+
+<isNotEmpty property="orderId">
+	and ORDER_ID = #orderId#
+</isNotEmpty>
+
+</select>
+
+<select id="getClass" parameterClass="String" resultMap="String"> 
+	select LECTURE_ID
+	from ORDER_DETAIL
+	where ORDER_ID = (Select A.PAY_ID
+                        from PAYMENT A, ORDERS B
+                       where A.PAY_ID = B.ORDER_ID
+                         AND B.MEM_MAIL = #memMail#)
+</select>
+
+
+</sqlMap>			
+
+

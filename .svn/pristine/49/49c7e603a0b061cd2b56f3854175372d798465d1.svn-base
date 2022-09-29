@@ -1,0 +1,65 @@
+package qna.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import qna.service.IQnaService;
+import qna.service.qnaServiceImpl;
+import qna.vo.qnaVO;
+
+/**
+ * Servlet implementation class InsertQnaController1
+ */
+@WebServlet("/insertQna.do")
+public class InsertQnaController extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		req.getRequestDispatcher("/jsp/qna/qnaInsert.jsp").forward(req, resp);
+
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// 1. 요청 파라미터 정보 가져오기
+		String qnaTitle = req.getParameter("qnaTitle");
+		String qnaContent = req.getParameter("qnaContent");
+	
+		// HTTP 요청의 파라미터 값을 얻기 위해 사용하는 것이 request.getParameter() 메소드
+		
+		// 2.서비스 객체 생성
+		IQnaService qnaService = qnaServiceImpl.getInstance();
+		
+		// 3. 회원정보 등록
+		qnaVO qv = new qnaVO();
+		qv.setQnaTitle(qnaTitle);
+		qv.setQnaContent(qnaContent);
+		qv.setLectureId("a001");
+		qv.setMemMail("smfme@naver.com");
+		
+		
+		int cnt = qnaService.insertQna(qv);
+		
+		String msg = "";
+		
+		if(cnt > 0) {
+			msg = "성공";
+		} else {
+			msg = "실패";
+		}
+		
+		String redirctUrl = req.getContextPath() + "/listQna.do";
+		resp.sendRedirect(redirctUrl);
+		
+		
+	}
+
+}

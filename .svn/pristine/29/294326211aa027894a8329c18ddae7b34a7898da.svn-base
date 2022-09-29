@@ -1,0 +1,54 @@
+<%@page import="notice.vo.noticeVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	noticeVO notiVO = (noticeVO) request.getAttribute("notiVO");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+  a {
+  	display:inline-block;
+  }
+  </style>
+</head>
+<body>
+<%@ include file="../WEB-INF/jsp/header.jsp" %>
+
+	<table border="1" class="table talbe-bordred">
+		<tr>
+			<td>공지번호 </td>
+			<td><%=notiVO.getNoticeNum() %></td>
+		</tr>
+		<tr>
+			<td>공지날짜 </td>
+			<td><%=notiVO.getNoticeDate() %></td>
+		</tr>
+		<tr>
+			<td>제목 </td>
+			<td><%=notiVO.getNoticeTitle() %></td>
+		</tr>
+		</table>
+		
+		<div><%=notiVO.getNoticeContent() %></div>
+		
+		<div>
+			<a href="listNotice.do">목록</a>
+
+			<a href="deleteNotice.do?noticeNum=<%=notiVO.getNoticeNum() %>">삭제</a>
+			
+			<a href="updateNotice.do?noticeNum=<%=notiVO.getNoticeNum() %>">수정</a>
+		</div>
+<script>
+
+</script>
+<%@ include file="../WEB-INF/jsp/footer.jsp" %>
+</body>
+</html>

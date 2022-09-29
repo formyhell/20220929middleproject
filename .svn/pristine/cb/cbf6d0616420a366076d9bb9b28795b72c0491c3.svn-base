@@ -1,0 +1,71 @@
+package pay.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import pay.service.IPayService;
+import pay.service.PayServiceImpl;
+import pay.vo.PayVO;
+
+//우리가 지지정한 패턴
+@WebServlet("/pay/insertPay.do")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 3, maxFileSize = 11024 * 1024 * 40, maxRequestSize = 1024 * 1024 * 50)
+public class InsertPayController extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		//webContent 하위
+		req.getRequestDispatcher("/WEB_INF/jsp/cart/shop-cart.jsp").forward(req, resp);
+		
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// 1. 요청 파라미터 정보 가져오기
+		String payId = req.getParameter("payId");
+		String paySuc = req.getParameter("paySuc");
+		String merchantUid = req.getParameter("merchantUid");
+		String memHp = req.getParameter("memHp");
+		String memName = req.getParameter("memName");
+		String pgProvider = req.getParameter("pgProvider");
+		
+		// 2. 서비스 객체 생성하기
+		IPayService payService = PayServiceImpl.getInstance();
+		
+		// 3. 회원정보 등록
+		PayVO pv = new PayVO();
+		pv.setpayId(payId);
+		pv.setPaySuc(paySuc);
+		pv.setMerchantUid(merchantUid);
+		pv.setMemHp(memHp);
+		pv.setMemName(memName);
+		pv.setPgProvider(pgProvider);
+		
+		System.out.println(pv);
+		
+		int cnt = payService.insertPay(pv);
+		
+		resp.getWriter().print("{\"result\": " + cnt + "}");
+		
+//		String msg = "";	
+//		if(cnt > 0) {
+//			msg = "성공";
+//		}else {
+//			msg = "실패";
+//		}
+		
+//		req.getRequestDispatcher("/member/list.do").forward(req, resp);
+		
+		String redirectUrl = req.getContextPath() + "/cauculation/cart/Receipt.html";  //req.getContextPath() => http://localhost/ServletExam/
+		
+		//resp.sendRedirect(redirectUrl); //사용자로 부터 요청을 두번함.
+	}
+}

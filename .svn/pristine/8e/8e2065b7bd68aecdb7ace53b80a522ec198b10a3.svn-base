@@ -1,0 +1,106 @@
+package member.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import member.service.IMemberService;
+import member.service.MemberServiceImpl;
+import member.vo.MemberVO;
+
+@WebServlet("/memberupdate.do")
+public class UpdateMemberController extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("/jsp/member/mypage/mypageModify.jsp").forward(req, resp);
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// 현재 로그인하고 있는 회원의 세션 가져오기 
+		HttpSession session=req.getSession(); // 새 세션이 생성되지 않고 기존에 있는 걸 가져오게 된다.
+		String memPwSession = (String)session.getAttribute("memPw");
+		String memMail = (String)session.getAttribute("memMail");
+		
+		// 폼에 입력한 기존 비밀번호 값 받아오기
+		String memPwForm = req.getParameter("memPw"); // 비밀번호 값 받아오기
+		String memNewPwForm = req.getParameter("memNewPw"); // 새 비밀번호 값 받아오기
+		
+		// 세션의 비밀번호 값과 받아온 비밀번호 값을 비교하기
+		if (memPwSession.equals(memPwForm)) { // 일치하면 일치한단 메시지 띄워주기
+			System.out.println("비밀번호가 일치합니다.");
+
+			resp.getWriter().write("{\"result\": \"ok\"}");
+			
+			// 기존 비밀번호가 일치할 경우만 새로운 값으로 변경하기
+
+			// 2. 서비스 객체 생성하기
+			IMemberService memService = MemberServiceImpl.getInstance();
+			
+			// 회원정보 조회
+			MemberVO mv = memService.getMember(memMail);
+
+			// 3. 회원정보 변경
+			mv.setMemPw(memNewPwForm);
+			
+			int cnt = memService.updateMember(mv);
+			
+			String msg = "";
+			
+			if(cnt > 0) {
+				msg = "성공";
+			}else {
+				msg = "실패";
+			}
+			
+			// 무효화하고 다시 로그인하게 시키기.
+			
+			session.invalidate();
+			System.out.println("비번을 변경해서 로그아웃을 시켰어요. 다시 로그인해주세요.");
+			
+			// 비번 변경 후에 로그아웃 하고 이동시킬 때,
+			// 로그아웃 처리는 컨트롤러에서,
+			// 이동시키는건 jsp에서 window.location.href 사용해서 해야함
+			// (여기서 리다이렉트 쓰면 500 오류남)
+			// (jsp ajax 코드를 사용했기 때문에 그런듯)
+			
+//			String redirectUrl = req.getContextPath() + "/jsp/realMain.jsp"; // 로그아웃 성공하면 띄워주는 페이지임.
+			// getContextPath : 서블릿컨텍스트의 이름을 가져오는 메소드
+//			resp.sendRedirect(redirectUrl);
+			
+//			PrintWriter out = resp.getWriter();
+//			
+//			out.println("비밀번호 변경에 성공했습니다. 다시 로그인해주세요.");
+			
+//			String redirectUrl = req.getContextPath() + "/member/logout.do"; 
+//			// getContextPath : 서블릿컨텍스트(ServletExam)의 이름을 가져오는 메소드
+//			resp.sendRedirect(redirectUrl);
+			
+			//forward 방식 : req.getRequestDispatcher("/member/list.do").forward(req, resp); 이렇게 하면 글씨가 깨져서 나오네용
+			
+//			String redirectUrl = req.getContextPath() + "/member/list.do"; 
+//			// getContextPath : 서블릿컨텍스트(ServletExam)의 이름을 가져오는 메소드
+//			resp.sendRedirect(redirectUrl);
+			
+		} else { // 일치하지 않으면 오류 메세지
+			System.out.println("비밀번호가 일치하지 않아요.");
+			try {
+				resp.getWriter().write("{\"result\": \"fail\"}");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+}

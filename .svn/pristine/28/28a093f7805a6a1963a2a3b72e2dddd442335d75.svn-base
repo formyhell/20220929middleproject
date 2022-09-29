@@ -1,0 +1,75 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<aside class="navbar-aside" id="offcanvas_aside">
+		<div class="aside-top">
+			<a href="<%=request.getContextPath() %>/backindex.do" class="brand-wrap"> <img
+				src="<%=request.getContextPath() %>/nest-frontend/dingImage/logo.png" class="logo" alt="Nest Dashboard" />
+			</a>
+		</div>
+		<nav>
+			<ul class="menu-aside">
+				<li class="menu-item active"><a class="menu-link"
+					href="/backindex.do"> <i class="icon material-icons md-home"></i>
+						<span class="text">대시보드</span>
+				</a></li>
+				<li class="menu-item has-submenu"><a class="menu-link"
+					href="<%=request.getContextPath() %>/page-products-list.do"> <i
+						class="icon material-icons md-shopping_bag"></i> <span
+						class="text">강의</span>
+				</a>
+					<div class="submenu">
+						<a href="<%=request.getContextPath() %>/page-products-list.do">강의 목록</a> <a
+							href="<%=request.getContextPath() %>/page-approve-list.do">강의 승인</a>
+					</div></li>
+				<li class="menu-item has-submenu"><a class="menu-link"
+					href="page-orders-1.jsp"> <i
+						class="icon material-icons md-shopping_cart"></i> 
+						<span class="text">주문</span>
+				</a>
+					<div class="submenu">
+						<a href="page-orders-1.jsp">주문 목록</a> <a
+							href="page-orders-detail.jsp">주문 상세</a>
+					</div></li>
+				<li class="menu-item has-submenu"><a class="menu-link"
+					href="page-sellers-cards.jsp"> <i
+						class="icon material-icons md-store"></i> <span class="text">강사</span>
+				</a>
+					<div class="submenu">
+						<a href="<%=request.getContextPath() %>/listSeller.do">강사 목록</a>
+					</div></li>
+				<li class="menu-item has-submenu"><a class="menu-link" href="#">
+						<i class="icon material-icons md-person"></i> <span class="text">계정</span>
+				</a>
+					<div class="submenu">
+					 <a	href="page-error-404.jsp">Error 404</a>
+					</div></li>
+				<li class="menu-item"><a class="menu-link"
+					href="page-reviews.jsp"> <i
+						class="icon material-icons md-comment"></i> <span class="text">리뷰</span>
+				</a></li>
+				<li class="menu-item"><a class="menu-link" disabled href="#">
+						<i class="icon material-icons md-pie_chart"></i> <span
+						class="text">매출 통계</span>
+				</a></li>
+			</ul>
+			<hr />
+			<ul class="menu-aside">
+				<li class="menu-item has-submenu"><a class="menu-link" href="#">
+						<i class="icon material-icons md-settings"></i> <span class="text">설정</span>
+				</a>
+					<div class="submenu">
+						<a href="page-settings-1.jsp">계정 설정</a>
+					</div></li>
+			</ul>
+			<br /> <br />
+		</nav>
+	</aside>
+</body>
+</html>

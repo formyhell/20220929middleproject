@@ -1,0 +1,57 @@
+package coment.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import coment.service.IComentService;
+import coment.service.comentServiceImpl;
+import coment.vo.comentVO;
+import qna.service.IQnaService;
+import qna.service.qnaServiceImpl;
+import qna.vo.qnaVO;
+
+/**
+ * Servlet implementation class InsertQnaController1
+ */
+@WebServlet("/insertComent.do")
+public class InsertComentController extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		req.getRequestDispatcher("/jsp/coment/comentInsert.jsp").forward(req, resp);
+
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String comentContent = req.getParameter("comentContent");
+		int qnaNo = Integer.parseInt(req.getParameter("qnaNo"));
+	
+		
+		IComentService comentService = comentServiceImpl.getInstance();
+		
+		comentVO coVO = new comentVO();
+		coVO.setComentContent(comentContent);
+		coVO.setQnaNo(qnaNo);
+		coVO.setLectureId("a001");
+		coVO.setMemMail("test2@test2.com");
+		
+		
+		int cnt = comentService.insertComent(coVO);
+		
+		
+		String redirctUrl = req.getContextPath() + "/qnaDetail.do?qnaNo=" + qnaNo;
+		resp.sendRedirect(redirctUrl);
+		
+		
+	}
+
+}

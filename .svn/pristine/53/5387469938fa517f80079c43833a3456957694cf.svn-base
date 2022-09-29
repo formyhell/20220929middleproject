@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="orderDetail">
+<insert id="insertCart" parameterClass="cart.vo.CartVO">
+		
+	insert into ORDER_DETAIL (ORDER_DETAIL_ID,ORDER_ID,LECTURE_ID)
+	values (ORDER_DETAIL_ID_SEQ.NEXTVAL,#orderId#,#lectureId#)
+	
+</insert>
+
+<resultMap class="CartVO" id="cartMap">
+
+	<result property="orderDetailId" column="ORDER_DETAIL_ID"/>
+	<result property="orderId" column="ORDER_ID"/>
+	<result property="lectureId" column="LECTURE_ID"/>
+	
+</resultMap>
+
+<update id="updateCart" parameterClass="String">
+	update ORDER_DETAIL
+	set ORDER_DETAIL_ID=#orderDetailId#,
+	    ORDER_ID=#orderId#
+	    LECTURE_ID=#lectureId#
+		where ORDER_DETAIL_ID=#orderDetailId#
+</update>
+
+<delete id="deleteCart" parameterClass="String">
+	
+	delete from ORDER_DETAIL
+	where ORDER_DETAIL_ID = #orderDetailId#
+	
+</delete>
+
+<select id="getCartAll" resultMap="cartMap">
+	select  *
+	from ORDER_DETAIL
+</select>
+
+<select id="getCartfromOrder" parameterClass="String" resultMap="cartMap"> 
+	select *
+	from ORDER_DETAIL
+	where ORDER_ID = #orderId#
+</select>
+
+<select id="getCartfromlecId" parameterClass="String" resultMap="cartMap"> 
+	select *
+	from ORDER_DETAIL
+	where LECTURE_ID = #lectureId#
+</select>
+
+<select id="checkCart" parameterClass="String" resultClass="int">
+	select count(*) as cnt
+	from ORDER_DETAIL
+	where ORDER_DETAIL_ID = #orderDetailId#
+</select>
+
+<select id="searchCart" parameterClass="CartVO" resultMap="cartMap">
+
+	select * from ORDER_DETAIL where 1=1 
+
+<isNotEmpty property="orderDetailId">
+	and ORDER_DETAIL_ID = #orderDetailId#
+</isNotEmpty>
+
+</select>
+
+</sqlMap>			
+
+

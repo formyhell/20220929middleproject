@@ -1,0 +1,59 @@
+package member.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import member.service.IMemberService;
+import member.service.MemberServiceImpl;
+import member.vo.MemberVO;
+
+@WebServlet("/member/insert.do")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 3,
+maxFileSize = 1024 * 1024 * 40, maxRequestSize = 1024 * 1024 * 50)
+public class InsertMemberController extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("/jsp/insertForm.jsp").forward(req, resp);
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// 1. 요청 파라미터 정보 가져오기
+		String memMail = req.getParameter("email");
+		String memPw = req.getParameter("pw");
+		
+		// 2. 서비스 객체 생성하기
+		IMemberService memService = MemberServiceImpl.getInstance();
+		
+		// 3. 회원정보 등록
+		MemberVO mv = new MemberVO();
+		mv.setMemMail(memMail);
+		mv.setMemPw(memPw);
+		
+		int cnt = memService.insertMember(mv);
+		
+		String msg = "";
+		
+		if(cnt > 0) {
+			msg = "성공";
+		}else {
+			msg = "실패";
+		}
+		
+		//forward 방식 : req.getRequestDispatcher("/member/list.do").forward(req, resp); 이렇게 하면 글씨가 깨져서 나오네용
+		
+		String redirectUrl = req.getContextPath() + "/member/list.do"; 
+		// getContextPath : 서블릿컨텍스트(ServletExam)의 이름을 가져오는 메소드
+		resp.sendRedirect(redirectUrl);
+		
+	}
+
+}

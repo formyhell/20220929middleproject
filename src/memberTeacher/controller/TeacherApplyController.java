@@ -1,0 +1,73 @@
+package memberTeacher.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import member.service.IMemberService;
+import member.service.MemberServiceImpl;
+import member.vo.MemberVO;
+import memberTeacher.service.IMemberTeacherService;
+import memberTeacher.service.MemberTeacherServiceImpl;
+import memberTeacher.vo.MemberTeacherVO;
+
+@WebServlet("/teacherApply.do")
+public class TeacherApplyController extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("/jsp/teacher/teacherForm.jsp").forward(req, resp);
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// 1. 강사신청할때 인서트할 파라미터 정보를 폼에서  가져오기
+		String instructorId = req.getParameter("name");
+		String teachTel = req.getParameter("tel");
+		String teachSubject = req.getParameter("subject");
+		String teachIntrod = req.getParameter("comment");
+		String teachLink = req.getParameter("link");
+		
+		// 2. 서비스 객체 생성하기
+		IMemberTeacherService teacherService = MemberTeacherServiceImpl.getInstance();
+		
+		// 세션 가져오기
+		
+		HttpSession session = req.getSession();
+		
+		// 3. 회원정보 등록
+		MemberTeacherVO mtv = new MemberTeacherVO();
+		
+		mtv.setInstructorId(instructorId);
+		mtv.setMemMail((String)session.getAttribute("memMail")); // 세션값을 가져와서 String으로 변경해주기
+		mtv.setTeachTel(teachTel);
+		mtv.setTeachSubject(teachSubject);
+		mtv.setTeachIntrod(teachIntrod);
+		mtv.setTeachLink(teachLink);
+		
+		int cnt = teacherService.insertMemberTeacher(mtv);
+		
+		String msg = "";
+		
+		if(cnt > 0) {
+			msg = "성공";
+		}else {
+			msg = "실패";
+		}
+		
+		//forward 방식 : req.getRequestDispatcher("/member/list.do").forward(req, resp); 이렇게 하면 글씨가 깨져서 나오네용
+		
+		String redirectUrl = req.getContextPath() + "/member/logout.do"; 
+		// getContextPath : 서블릿컨텍스트(ServletExam)의 이름을 가져오는 메소드
+		resp.sendRedirect(redirectUrl);
+		
+	}
+
+}

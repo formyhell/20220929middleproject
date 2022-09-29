@@ -1,0 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<%@ include file="../../header.jsp" %>
+
+<div class="banner text-center">
+  <h3>MY PAGE</h3>
+  <p>마이 페이지 입니다. 내 글을 모아보거나 회원 정보를 관리할 수 있어요!</p>
+</div>
+
+<div class="container-fluid text-center">
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <p><a href="mypageMain.jsp">대시보드</a></p>
+      <p><a href="mypageModify.jsp">회원 정보 수정</a></p>
+      <p><a href="mypageResign.jsp">회원 탈퇴</a></p>
+    </div>
+    <div class="col-sm-8 text-left"> 
+      <h1>대시보드입니다. </h1>
+      <p>정보를 한눈에 모아봅시다.</p>
+      <hr>
+      <h3>Test</h3>
+      <p>Lorem ipsum...</p>
+    </div>
+    <div class="col-sm-2 sidenav">
+      <div class="well">
+        <p>ADS수정</p>
+      </div>
+      <div class="well">
+        <p>ADS</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%@ include file="../../footer.jsp" %>
+
+</body>
+</html>

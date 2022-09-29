@@ -1,0 +1,87 @@
+package wishlist.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.management.RuntimeErrorException;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import qna.vo.qnaVO;
+import wishlist.vo.wishlistVO;
+
+public class wishlistDAOImpl implements IWishlistDAO{
+	
+	private static IWishlistDAO qnaDAO;
+	
+	private wishlistDAOImpl() {
+		
+	}
+	public static IWishlistDAO getInstance() {
+		if(qnaDAO == null) {
+			qnaDAO = new wishlistDAOImpl();
+		}
+		return qnaDAO;
+	}
+
+	@Override
+	public int insertWishlist(SqlMapClient smc, wishlistVO wishVO) {
+		int cnt = 0;
+		
+		try {
+			cnt = smc.update("qna.insertQna", wishVO);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+	@Override
+	public int deleteWishlist(SqlMapClient smc, String memMail) {
+		int cnt = 0;
+		
+		try {
+			cnt = smc.delete("qna.deleteQna", memMail);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("문의글 삭제 실패", e);
+		}
+		
+		return cnt;
+	}
+	
+
+	@Override
+	public List<wishlistVO> getAllWishlist(SqlMapClient smc) {
+		List<wishlistVO> wishlist = new ArrayList<wishlistVO>();
+		
+		try {
+			wishlist = smc.queryForList("qna.getQnaAll");
+
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("문의글 조회중 예외 발생", e);
+		}
+		
+		return wishlist;
+	}
+
+	@Override
+	public wishlistVO getWishlist(SqlMapClient smc, String memMail) {
+		wishlistVO wishVO = null;
+		
+		try {
+			
+			wishVO = (wishlistVO) smc.queryForObject("qna.getQna", memMail);
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("문의글 상세 조회 중 예외 발생", e);
+		} 
+		
+		return wishVO;
+	}
+	
+
+}

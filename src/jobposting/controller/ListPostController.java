@@ -1,0 +1,46 @@
+package jobposting.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import jobposting.service.IPostService;
+import jobposting.service.PostServiceImpl;
+import jobposting.vo.PostVO;
+import qna.service.IQnaService;
+import qna.service.qnaServiceImpl;
+import qna.vo.qnaVO;
+
+
+/**
+ * Servlet implementation class ListQnaController
+ */
+@WebServlet("/listPost.do")
+public class ListPostController extends HttpServlet {
+	
+	@Override
+		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 1. 서비스 객체 생성
+				IPostService postService = PostServiceImpl.getInstance();
+				
+				// 2. 조회
+				List<PostVO> postList = postService.getAllPostList();
+				
+				req.setAttribute("postList", postList);
+				
+				RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/jsp/jobpost/postgrid.jsp");
+//				RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/jsp/jobpost/postList.jsp");
+				rd.forward(req, resp);
+		}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}

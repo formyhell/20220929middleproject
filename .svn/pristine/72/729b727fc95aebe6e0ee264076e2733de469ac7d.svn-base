@@ -1,0 +1,63 @@
+<%@page import="lecreview.vo.LecReviewVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	List<LecReviewVO> lecReviewList = (List<LecReviewVO>)request.getAttribute("lecReviewList");
+
+
+	String msg = session.getAttribute("msg") == null ? ""
+			: (String) session.getAttribute("msg");
+	session.removeAttribute("msg"); // 꺼내온 메세지 속성 제거하기
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>리뷰목록</title>
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+	<table border="1">
+		<tr>
+			<th>글번호</th>
+			<th>강의아이디</th>
+			<th>제목</th>
+			<th>별점</th>
+			<th>작성날짜</th>
+		</tr>
+	<%
+		int lecReviewSize = lecReviewList.size();
+		if(lecReviewSize > 0) {
+			for(int i = 0; i < lecReviewSize; i++) {
+	%>	
+		<tr>
+			<td><%=lecReviewList.get(i).getReNum() %></td>
+			<td><%=lecReviewList.get(i).getLecId() %></td>
+			<td><a href="detail.do?reNum=<%=lecReviewList.get(i).getReNum() %>"><%=lecReviewList.get(i).getReTitle() %></a></td>
+			<td><%=lecReviewList.get(i).getSatisfaction() %></td>
+			<td><%=lecReviewList.get(i).getReDate() %></td>
+		</tr>
+	<%
+			}
+		}else {	
+	%>	
+		<tr>
+			<td colspan="4">리뷰정보가 없습니다.</td>
+		</tr>
+	<%  } %>
+	
+	<tr align="center">
+		<td colspan="4"><a href="<%=request.getContextPath() %>/lecreview/insert.do">[리뷰 등록]</a></td>
+	</tr>
+
+	</table>
+	
+	<% if(msg.equals("성공")) { %>
+		<script>
+			alert('정상적으로 처리되었습니다.');
+		</script>
+	<%} %>
+<%@ include file="../footer.jsp" %>
+</body>
+</html>

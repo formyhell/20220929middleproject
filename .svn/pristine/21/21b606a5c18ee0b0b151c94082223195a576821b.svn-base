@@ -1,0 +1,22 @@
+package wishlist.vo;
+
+import java.util.Date;
+
+public class wishlistVO {
+	private String lectureId;
+	private String memMail;
+	public String getLectureId() {
+		return lectureId;
+	}
+	public void setLectureId(String lectureId) {
+		this.lectureId = lectureId;
+	}
+	public String getMemMail() {
+		return memMail;
+	}
+	public void setMemMail(String memMail) {
+		this.memMail = memMail;
+	}
+	
+	
+}

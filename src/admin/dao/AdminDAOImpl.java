@@ -1,0 +1,149 @@
+package admin.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import admin.vo.AdminVO;
+import admin.vo.instructorVO;
+import member.vo.MemberVO;
+import notice.vo.noticeVO;
+
+public class AdminDAOImpl implements IAdminDAO {
+
+	private static IAdminDAO adminDAO;
+
+	private AdminDAOImpl() {
+			
+		}
+
+	public static IAdminDAO getInstance() {
+		if (adminDAO == null) {
+			adminDAO = new AdminDAOImpl();
+		}
+		return adminDAO;
+	}
+
+//	@Override
+//	public int insertMember(SqlMapClient smc, AdminVO av) {
+//		int cnt = 0;
+//
+//		try {
+//			cnt = smc.update("qna.insertQna", av);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			throw new RuntimeException("문의 게시글 등록 실패", e);
+//		}
+//		return cnt;
+//	}
+//
+//	@Override
+//	public int updateMember(SqlMapClient smc, AdminVO av) {
+//		int cnt = 0;
+//
+//		try {
+//			cnt = smc.update("qna.updateQna", av);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			throw new RuntimeException("문의글 수정 실패", e);
+//		}
+//		return cnt;
+//	}
+
+	@Override
+	public int deleteMember(SqlMapClient smc, String MemberNo) {
+		int cnt = 0;
+
+		try {
+			cnt = smc.delete("member.deleteMember", MemberNo);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("회원 삭제 실패", e);
+		}
+
+		return cnt;
+	}
+
+	@Override
+	public List<MemberVO> searchMemberList(SqlMapClient smc, MemberVO mv) {
+		
+		List<MemberVO> memList = new ArrayList<MemberVO>();
+		
+		try {
+			
+			memList = smc.queryForList("member.searchMember", mv);
+			
+		}catch(SQLException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException("회원정보 검색 중 예외 발생!", ex);
+		}
+		
+		return memList;
+	}
+	
+	@Override
+	public List<AdminVO> getAdmin(SqlMapClient smc) {
+		
+		List<AdminVO> adminList = new ArrayList<AdminVO>();
+		
+		try {
+			
+			adminList = smc.queryForList("admin.getAdminId");
+
+		} catch(SQLException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException("전체 회원정보 조회 중 예외 발생!", ex);
+		} 
+		System.out.println(adminList);
+		return adminList;
+	}
+
+	@Override
+	public List<instructorVO> getSellerList(SqlMapClient smc) {
+		List<instructorVO> sellerList = new ArrayList<instructorVO>();
+		
+		try {
+			sellerList = smc.queryForList("admin.getSellerList");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return sellerList;
+	}
+
+	
+	// 관리자 로그인 추가
+	@Override
+	public AdminVO adminLogin(SqlMapClient smc, String adminId, String adminPw) {
+		AdminVO av = new AdminVO();
+		
+		av.setAdminId(adminId);
+		av.setAdminPw(adminPw);
+		
+		try {
+		
+		av = (AdminVO)smc.queryForObject("admin.loginAdmin", av); //object값이기 때문에 (int)로 캐스팅
+
+	} catch (SQLException ex) {
+		ex.printStackTrace();
+		throw new RuntimeException("로그인 정보 확인 중 예외 발생!", ex);
+	} 
+	
+	return av;
+	}
+
+	@Override
+	public instructorVO getSellerDetail(SqlMapClient smc, String instructId) {
+		instructorVO instVO = null;
+		
+		try {
+			instVO = (instructorVO) smc.queryForObject("admin.getSellerDetail", instructId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return instVO;
+	}
+	
+}

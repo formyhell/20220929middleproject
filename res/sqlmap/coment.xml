@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="coment">			
+
+	<insert id="insertComent" parameterClass="comentVO">
+		insert into coment (coment_no,
+							coment_date,
+							coment_content,
+							qna_no,
+							lecture_id,
+							mem_mail)
+		values (coment_no_seq.nextval, sysdate, #comentContent#, #qnaNo#, #lectureId#, #memMail#)
+	</insert>
+	
+	<update id="updateComent" parameterClass="comentVO">
+		update coment set coment_content=#comentContent# where coment_no=#comentNo#
+	</update>
+	
+	<delete id="deleteComent" parameterClass="int">
+		delete from coment where coment_no=#comentNo#
+    </delete>
+	<delete id="delComForQna" parameterClass="int">
+		delete from coment where qna_no=#qnaNo#
+    </delete>
+
+	<resultMap id="comentMap" class="comentVO">
+		<result property="comentNo" 	column="coment_no" />
+		<result property="comentDate" 	column="coment_date" />
+		<result property="comentContent" column="coment_content" />
+		<result property="qnaNo" 		column="qna_no" />
+		<result property="lectureId" 	column="lecture_id" />
+		<result property="memMail" 		column="mem_mail" />
+	</resultMap>
+	
+	<select id="getComentAll" parameterClass="int" resultMap="comentMap">
+		select * from coment where qna_no=#qnaNo# order by 1
+	</select>
+	<select id="getComent" parameterClass="int" resultMap="comentMap">
+		select * from coment where coment_no=#comentNo#
+	</select>
+
+</sqlMap>			
+
+
+
+
+

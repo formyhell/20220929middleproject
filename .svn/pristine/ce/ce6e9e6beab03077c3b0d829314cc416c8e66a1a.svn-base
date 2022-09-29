@@ -1,0 +1,300 @@
+﻿<%@page import="lecture.vo.LectureVO"%>
+<%@page import="member.vo.MemberVO"%>
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+<meta charset="utf-8">
+<title>DING - 장바구니</title>
+ <!-- jQuery -->
+ <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+ <!-- iamport.payment.js -->
+ <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<%String cartId = session.getId();%>
+
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/x-icon"
+	href="<%=request.getContextPath()%>/nest-frontend/assets/imgs/theme/favicon.svg">
+<!-- Template CSS -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/nest-frontend/assets/css/main.css?v=5.2">
+
+<style>
+.countStyle{
+	margin-right: 6px;
+}
+
+#countBox{
+	padding-left: 10px;
+	padding-bottom: 20px;
+	background-color: rgb(220,221,221);
+}
+
+</style>
+</head>
+
+<body>
+<%@ include file="../header.jsp" %>
+	<main class="main">
+		<div class="page-header breadcrumb-wrap">
+			<div class="container">
+				<div class="breadcrumb">
+					<a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+					<span></span> Shop <span></span> Cart
+				</div>
+			</div>
+		</div>
+            <div id="goorder" class="">
+                <div class="clear"></div>
+                <div class="buttongroup center-align cmd">
+                </div>
+            </div>
+            
+			<div class="row">
+<!--             장바구니 -->
+				<div class="col-lg-8">
+					<div class="table-responsive shopping-summery">
+						<table class="table table-wishlist">
+							<thead>
+								<tr class="main-heading">
+									<th class="custome-checkbox start pl-30">
+									<input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="">
+									<label class="form-check-label" for="exampleCheckbox11">
+									</label>
+									</th>
+									<th scope="col" colspan="2">Product</th>
+									<th scope="col">Unit Price</th>
+									<th scope="col" class="end">Remove</th>
+								</tr>
+							</thead>
+							<tbody>
+<%
+	int cs = 0;
+	ArrayList<LectureVO> cartList = (ArrayList<LectureVO>)session.getAttribute("cartlist");
+		cs = cartList.size();
+		if(cartList == null){
+			cartList = new ArrayList<LectureVO>();
+		}
+		int sum = 0; 
+		for(int i=0; i<cs; i++){
+			LectureVO lec = cartList.get(i);
+			int total = lec.getLecPrice();
+			sum = sum + total;
+%>
+								<tr>
+									<td class="custome-checkbox pl-30">
+									<input class="form-check-input" type="checkbox" name="checkbox" value=""> 
+										<label class="form-check-label" for="exampleCheckbox2"></label>
+									</td>
+									<td class="product-des product-name">
+										<h6 class="mb-5">
+											<a class="product-name mb-10 text-heading"
+												href="<%=request.getContextPath()%>/lecture/detail.do?lecId=<%=lec.getLecId() %>"><%=lec.getLecTitle()%></a>
+										</h6>
+<!-- 										<div class="product-rate-cover"> -->
+<!-- 											<div class="product-rate d-inline-block"> -->
+<!-- 												<div class="product-rating" style="width: 90%"></div> -->
+<!-- 											</div> -->
+<!--  											<span class="font-small ml-5 text-muted"> (4.0)</span> --> 
+<!-- 										</div> -->
+									</td>
+									<td class="price" data-title="Price">
+										<h4 class="text-body"><%=lec.getLecPrice()%></h4>
+									</td>
+									<td class="action text-center" data-title="Remove" ><a
+										href="#" class="text-body"><i class="fi-rs-trash"></i></a></td>
+								</tr>
+<%
+		}
+%>
+							</tbody>
+						</table>
+					</div>
+					<div class="divider-2 mb-30"></div>
+					<div class="cart-action d-flex justify-content-between">
+						<a class="btn" href="<%=request.getContextPath()%>/lecture/list.do"><i class="fi-rs-arrow-left mr-10"></i>Continue Shopping</a>
+					</div>
+				</div>
+				
+<!-- 				장바구니 끝 -->
+				
+<!-- 				결제 시작-->
+				<div class="col-lg-4">
+					<div id="countBox">
+	               		<h1 class="heading-2 mb-10">Checkout</h1>
+	                    <div class="d-flex justify-content-between">
+	                        <h6 class="text-body">There are <span class="text-brand"><%=cs%></span> products in your cart</h6>
+	                    </div>
+	                	<div class="row">
+	                        <h4 class="mb-30">총결제금액 : <%=sum %>원</h4>
+	                        <form method="post">
+	                            <div class="countStyle">
+	                                <div class="form-group col-lg-6">
+<%-- 	                                	<h5 class="mb-30"><%=memMail%></h5>   --%>
+ 	                                	<h5 class="mb-30"><%=memMail%></h5>   
+	                                </div>
+	                            </div>
+	                            <div class="countStyle">
+	                                <div class="form-group col-lg-6">
+	                                    <input id="memName" type="text" name="fname" placeholder="First name *" onkeyup="input()">
+	                                </div>
+	                            </div>
+	                            <div class="countStyle">
+	                                <div class="form-group col-lg-6">
+	                                    <input id="memTel" type="text" name="phone" placeholder="Phone *" onkeyup="input()">
+	                                </div>
+	                            </div>
+	                        </form>
+	                    </div>
+	                    <div class="payment ml-30">
+	                        <h4 class="mb-30">Payment</h4>
+	                        <a href="javascript:requestPay()" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a>
+	                    </div>
+					</div>
+				</div>
+<!-- 				결제 끝 -->
+				
+			</div>
+		</div>
+	</main>
+	<!-- Preloader Start -->
+	<div id="preloader-active">
+		<div
+			class="preloader d-flex align-items-center justify-content-center">
+			<div class="preloader-inner position-relative">
+				<div class="text-center">
+					<img src="<%=request.getContextPath()%>/nest-frontend/assets/imgs/theme/loading.gif" alt="">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		//////////////////////장바구니//////////////////////
+		
+function delSession(){
+
+}	
+		
+		
+		/////////////////////결제/////////////////////////
+		
+var memName = "";
+var memTel = "";
+function input(){		
+	memName = document.querySelector('#memName').value;
+	memTel = document.querySelector('#memTel').value;
+}
+
+IMP.init("imp95268200"); // 예: imp00000000
+   function requestPay() {
+    	  $.ajax({
+			  url : '/Test5/pay/insertOrder.do',
+			  type : 'post',
+			  data : {
+						  cartId: <%=cartId%>,
+						  orderPrice: sum,
+						  memMail: "<%=memMail%>"
+				     },
+			  success : function(rst,status,xhr){
+				  var oi = rst.result;
+				  console.log(oi, memName, memTel);
+				  
+				  IMP.request_pay({ // param
+ 
+					  pg: "inicis",
+			          pay_method: "card",
+			          merchant_uid: oi,
+			          name: "_ding",
+			          amount: sum,
+			          buyer_email: "<%=memMail%>",
+			          buyer_name: memName,
+			          buyer_tel: memTel
+				          
+			      }, function (rsp) { // callback
+			    	  var result = '';
+				      	  var suc = 'F';
+			          if (rsp.success) {
+			        	  console.log('빌링키 발급 성공',rsp)
+			        	  suc = "T";
+						  $.ajax({
+							  url : '/Test5/pay/insertPay.do',
+							  type : 'post', 		//method
+							  data : {
+										  payId	: oi,
+										  paySuc : suc,
+										  merchantUid : rsp.merchant_uid,
+										  memHp : rsp.buyer_tel,
+										  memName : rsp.buyer_name,
+										  pgProvider : rsp.pg_provider
+							     },//없으면 생략
+//					 	  success : function(1.전달받는응답데이터 / 2.데이터상태문자열 / 3. xhr속성){},
+						  success : function(rst,status,xhr){
+							  console.log("InsertPayController로 통신!");
+							 
+						  },
+//					 	  error : function(1.xhr속성 / 2.데이터상태문자열 / 3. error코드 ){},
+						  error : function(xhr,status,error){
+							  console.log(xhr.status);
+							  console.log(xhr.statusText);
+						  },
+						  dataType : 'json'
+					  });
+					  alert('결제가 완료 되었습니다.')
+					  result = 0;
+		          } else {
+				        var msg = '결제에 실패하였습니다.';
+				        msg += '에러내용 : ' + rsp.error_msg;
+				        result ='1';
+				    }
+				    if(result=='0') {
+				    	location.href= "<%=request.getContextPath()%>/Cart/Success";
+				    }
+				    alert(msg);
+		      });
+		  },
+		  error : function(xhr,status,error){
+			  console.log(xhr.status);
+			  console.log(xhr.statusText);
+		  },
+		  dataType : 'json'
+	  });
+}
+		
+		
+		
+	</script>
+	<!-- Vendor JS-->
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/vendor/jquery-3.6.0.min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/vendor/bootstrap.bundle.min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/slick.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/jquery.syotimer.min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/wow.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/jquery-ui.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/perfect-scrollbar.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/magnific-popup.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/select2.min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/waypoints.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/counterup.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/jquery.countdown.min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/images-loaded.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/isotope.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/scrollup.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/jquery.vticker-min.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/jquery.theia.sticky.js"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/plugins/jquery.elevatezoom.js"></script>
+	<!-- Template  JS -->
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/main.js?v=5.2"></script>
+	<script src="<%=request.getContextPath()%>/nest-frontend/assets/js/shop.js?v=5.2"></script>
+	
+<%@ include file="../footer.jsp" %>
+</body>
+
+</html>

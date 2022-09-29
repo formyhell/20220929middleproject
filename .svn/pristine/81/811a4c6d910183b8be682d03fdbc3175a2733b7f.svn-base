@@ -1,0 +1,27 @@
+package member.vo;
+
+// 멤버 정보 (입력, 수정 가능)
+
+public class MemberVO {
+	private String memMail;
+	private String memPw;
+	
+	public String getMemMail() {
+		return memMail;
+	}
+	public void setMemMail(String memMail) {
+		this.memMail = memMail;
+	}
+	public String getMemPw() {
+		return memPw;
+	}
+	public void setMemPw(String memPw) {
+		this.memPw = memPw;
+	}
+	
+	@Override
+	public String toString() {
+		return "MemberVO [memMail=" + memMail + ", memPw=" + memPw + "]";
+	}
+	
+}

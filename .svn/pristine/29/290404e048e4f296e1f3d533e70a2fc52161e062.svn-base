@@ -1,0 +1,140 @@
+package qna.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.management.RuntimeErrorException;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import qna.vo.qnaVO;
+
+public class qnaDAOImpl implements IQnaDAO{
+	
+	private static IQnaDAO qnaDAO;
+	
+	private qnaDAOImpl() {
+		
+	}
+	public static IQnaDAO getInstance() {
+		if(qnaDAO == null) {
+			qnaDAO = new qnaDAOImpl();
+		}
+		return qnaDAO;
+	}
+
+	@Override
+	public int insertQna(SqlMapClient smc, qnaVO qv) {
+		int cnt = 0;
+		
+		try {
+			cnt = smc.update("qna.insertQna", qv);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+	@Override
+	public int updateQna(SqlMapClient smc, qnaVO qv) {
+		int cnt = 0;
+		
+		try {
+			cnt = smc.update("qna.updateQna", qv);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("문의글 수정 실패", e);
+		}
+		return cnt;
+	}
+
+	@Override
+	public int deleteQna(SqlMapClient smc, int qnaNo) {
+		int cnt = 0;
+		
+		try {
+			cnt = smc.delete("qna.deleteQna", qnaNo);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("문의글 삭제 실패", e);
+		}
+		
+		return cnt;
+	}
+	
+
+	@Override
+	public List<qnaVO> getAllQnaList(SqlMapClient smc) {
+		List<qnaVO> qnaList = new ArrayList<qnaVO>();
+		
+		try {
+			qnaList = smc.queryForList("qna.getQnaAll");
+
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("문의글 조회중 예외 발생", e);
+		}
+		
+		return qnaList;
+	}
+
+	@Override
+	public qnaVO getQna(SqlMapClient smc, int qnaNo) {
+		qnaVO qv = null;
+		
+		try {
+			
+			qv = (qnaVO)smc.queryForObject("qna.getQna", qnaNo);
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("문의글 상세 조회 중 예외 발생", e);
+		} 
+		
+		return qv;
+	}
+
+	@Override
+	public List<qnaVO> searchQnaList(SqlMapClient smc, String qnaTitle) {
+		List<qnaVO> qnaList = new ArrayList<qnaVO>();
+		
+		try {
+			
+			qnaList = smc.queryForList("qna.searchQna", qnaTitle);
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new RuntimeException("회원정부 검색 중 예외 발생", e);
+		} 
+		
+		return qnaList;
+	}
+	@Override
+	public List<qnaVO> moreQna(SqlMapClient smc, String lectureId) {
+		List<qnaVO> qnaList = new ArrayList<qnaVO>();
+		
+		try {
+			qnaList = smc.queryForList("qna.moreQna", lectureId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return qnaList;
+	}
+	
+	@Override
+	public List<qnaVO> lectureQnaList(SqlMapClient smc, String lecId) {
+		List<qnaVO> qnaList = new ArrayList<qnaVO>();
+		
+		try {
+			qnaList = smc.queryForList("qna.lectureQna", lecId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return qnaList;
+	}
+	
+
+
+}

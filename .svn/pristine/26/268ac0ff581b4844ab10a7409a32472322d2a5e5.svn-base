@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script>
+	function addToCart(){
+		// 확인 true 취소 false
+		if(confirm("장바구니에 추가하시겠습니까?")){ // 확인
+			document.addForm.submit();
+		}else{ // 취소
+			document.addForm.reset();
+		}
+	}
+</script>
+
+<p>
+	<form name ="addForm" method="post" action="addCart.jsp?lecId=${LectureVO.lecId}">
+	<a href="#" class="btn btn-info" onclick="addToCart()">
+	강의주문 &raquo;</a>
+	<a href="Cart.jsp" class="btn btn-warning">
+        장바구니&raquo;</a>
+	</form>
+</p>
+</body>
+</html>

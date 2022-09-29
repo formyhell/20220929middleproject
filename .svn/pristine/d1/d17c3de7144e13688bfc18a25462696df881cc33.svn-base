@@ -1,0 +1,45 @@
+<%@page import="qna.vo.qnaVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	qnaVO qv = (qnaVO) request.getAttribute("qv");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+	<form method="post" action="<%=request.getContextPath() %>/updateQna.do">
+	<input type="hidden" name="qnaNo" value="<%=qv.getQnaNo() %>">
+	<table border="1">
+		<tr>
+			<td>강의번호: </td>
+			<td><%=qv.getLectureId() %></td>
+		</tr>
+		<tr>
+			<td>회원: </td>
+			<td><%=qv.getMemMail() %></td>
+		</tr>
+		<tr>
+			<td>작성날짜: </td>
+			<td><%=qv.getQnaDate() %></td>
+		</tr>
+	</table>
+		<div>
+			제목
+			<input name="qnaTitle" value="<%=qv.getQnaTitle() %>">
+		
+		</div>
+		<div>
+			내용
+			<textarea name="qnaContent" cols="50" rows="50"><%=qv.getQnaContent() %></textarea>
+		</div>
+		
+	<input type="submit" value="수정 ">
+	</form>
+		<%@ include file="../footer.jsp" %>
+</body>
+</html>

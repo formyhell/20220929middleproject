@@ -1,0 +1,135 @@
+﻿<%@page import="coment.vo.comentVO"%>
+<%@page import="java.util.List"%>
+<%@page import="qna.vo.qnaVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	qnaVO qv = (qnaVO) request.getAttribute("qv");
+	LectureVO lv = (LectureVO) request.getAttribute("lv");
+	List<comentVO> comentList = (List<comentVO>) request.getAttribute("comentList");
+%>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	#d1 {
+		margin: 10px;
+	}
+</style>
+</head>
+
+<body>
+<%@ include file="../header.jsp" %>
+    <main class="main">
+        <div class="page-content mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 m-auto">
+                        <div class="single-page pt-50 pr-30">
+                            <div class="single-header style-2">
+                                <div class="row">
+                                    <div class="col-xl-10 col-lg-12 m-auto">
+                                        <h6 class="mb-10"><a href="<%=request.getContextPath() %>/lecture/detail.do?lecId=<%=lv.getLecId() %>"><%=lv.getLecTitle() %></a></h6>
+			                            <div class="single-content">
+			                                        <h2 class="mb-10"><%=qv.getQnaTitle() %></h2>
+			                                <div class="row">
+			                                        <%=qv.getQnaContent() %>
+			                                </div>
+			                            </div>   
+                          <!--Entry bottom-->
+                           <div class="entry-bottom mt-50 mb-30">
+                               <div class="tags w-50 w-sm-100">
+                                   <a href="<%=request.getContextPath() %>/moreQna.do?lecId=<%=lv.getLecId() %>" rel="tag" class="hover-up btn btn-sm btn-rounded mr-10">목록</a>
+                                   <a href="<%=request.getContextPath() %>/updateMoreQna.do?qnaNo=<%=qv.getQnaNo() %>&lecId=<%=lv.getLecId() %>" class="hover-up btn btn-sm btn-rounded mr-10">수정</a>
+                                   <a href="<%=request.getContextPath() %>/deleteMoreQna.do?qnaNo=<%=qv.getQnaNo() %>&lecId=<%=lv.getLecId() %>" class="hover-up btn btn-sm btn-rounded mr-10">삭제</a>
+                               </div>
+                           </div>
+                                        
+                           <!--Comment form-->
+                           <div class="comment-form">
+                               <h4 class="mb-15 text-center mb-30">의견을 남겨주세요</h4>
+                               <div class="row">
+                                   <div class="col-lg-9 col-md-12  m-auto">
+                                   
+                                       <form onsubmit="return validCheck()" class="form-contact comment_form mb-50" action="<%=request.getContextPath() %>/moreQnaDetail.do" method="post">
+                                          <input type="hidden" name="lecId" value="<%=lv.getLecId() %>">
+                                          <input type="hidden" name="qnaNo" value="<%=qv.getQnaNo() %>">
+                                           <div class="row">
+                                               <div class="col-12">
+                                                   <div class="form-group">
+                                                       <textarea class="form-control w-100" name="comentContent" cols="30" rows="9" placeholder="답변을 남겨주세요." id="comentCon"></textarea>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                          <input type="submit" class="hover-up btn btn-rounded mr-10" value="등록" onclick="check()">
+                                        </form>
+                                       
+                                       <div class="comments-area">
+                                           <h3 class="mb-30">Comments</h3>
+                                           <div class="comment-list m-auto"">
+                                           <%		
+										int comentSize = comentList.size();
+										if(comentSize > 0) {
+											for(int i = 0; i < comentSize; i++){
+									%>
+                                               <div class=" single-comment justify-content-between d-flex mb-30">
+                                               <div class="user justify-content-between d-flex">
+                                                   <div class="thumb text-center">
+                                                       by <%=comentList.get(i).getMemMail() %>
+                                                   </div>
+                                                   <div class="desc">
+                                                       <div class="d-flex justify-content-between mb-10">
+                                                           <div class="d-flex align-items-center">
+                                                               <span class="font-xs text-muted"><%=comentList.get(i).getComentDate() %></span>
+                                                               <div id="d1">
+	                                                               <a href="<%=request.getContextPath() %>/updateComent.do?comentNo=<%=comentList.get(i).getComentNo() %>">수정</a>
+																   <a href="<%=request.getContextPath() %>/deleteMoreComent.do?comentNo=<%=comentList.get(i).getComentNo() %>&qnaNo=<%=qv.getQnaNo() %>&lecId=<%=lv.getLecId() %>">삭제</a>
+                                                               </div>
+                                                           </div>
+                                                       </div>
+                                                       <%=comentList.get(i).getComentContent() %>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                           <%
+											}
+										} else {
+									%>
+										<div> 등록된 답변이 없습니다.</div>
+									<%		
+										}
+									%>	
+                                       </div>
+                                   </div>
+                               </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+<%@ include file="../footer.jsp" %>
+<script>
+function validCheck() {
+	var comentCon = document.getElementById('comentCon').value;
+
+	if(comentCon == ""){
+		alert('답변을 입력해주세요');
+		return false;
+	}
+	return true;
+}
+</script>
+
+
+</body>
+
+</html>

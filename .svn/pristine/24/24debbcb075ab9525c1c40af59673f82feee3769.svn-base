@@ -1,0 +1,128 @@
+package pay.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import cart.vo.CartVO;
+import member.vo.MemberVO;
+import pay.vo.OrderVO;
+import pay.vo.PayVO;
+
+public class OrderDAOImpl implements IOrderDAO{
+	
+	private static IOrderDAO dao;
+	
+	private OrderDAOImpl() {
+	}
+	
+	public static IOrderDAO getInstance() {
+		if(dao == null) {
+			dao = new OrderDAOImpl();
+		}
+		return dao;
+	}
+
+	@Override
+	public long insertOrder(SqlMapClient smc, OrderVO pv) {
+		long cnt = 0;
+		try {
+			cnt = Long.parseLong((String)smc.insert("orders.insertOrder",pv));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Order SQL입력오류!!!", e);
+		}
+		
+		return cnt;
+	}
+
+	@Override
+	public int updateOrder(SqlMapClient smc, OrderVO pv) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteOrder(SqlMapClient smc, String orderId) {
+		int cnt = 0;
+		try {
+			cnt = smc.delete("member.deleteMember", orderId);
+			
+		}catch(SQLException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException("회원정보 삭제 중 예외발생!", ex);
+		}
+		return cnt;
+	}
+
+	@Override
+	public List<OrderVO> getAllOrderList(SqlMapClient smc) {
+		
+		List<OrderVO> orderList = new ArrayList<OrderVO>();
+		
+		try {
+			orderList = smc.queryForList("orders.getOrderAll");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Order SQL전체출력 오류!!!", e);
+		}
+		
+		return orderList;
+	}
+
+	@Override
+	public boolean checkOrder(SqlMapClient smc, String orderId) {
+		boolean chk = false;
+		try {
+			int cnt = (int)smc.queryForObject("orders.checkOrder", orderId);
+			if(cnt > 0) {
+				chk = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Order 유무확인 도중 오류발생!", e);
+		}
+		return chk;
+	}
+
+	@Override
+	public OrderVO getOrder(SqlMapClient smc, String memMail) {
+		OrderVO ov = null;
+		try {
+			ov = (OrderVO) smc.queryForObject("orders.getOrder",memMail);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Order 정보조회중 오류발생!!", e);
+		}
+		return ov;
+	}
+
+	@Override
+	public List<OrderVO> searchOrderList(SqlMapClient smc, OrderVO pv) {
+		List<OrderVO> orderList = new ArrayList<OrderVO>();
+		
+		try {
+			orderList = smc.queryForList("orders.searchOrder",pv);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Order 정보 검색중 예외 발생!", e);
+		}
+		return orderList;
+	}
+
+	@Override
+	public List<CartVO> getClass(SqlMapClient smc, String memMail) {
+		List<CartVO> list = new ArrayList<CartVO>();
+		try {
+			list = smc.queryForList("orders.getClass", memMail);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Order 정보 검색중 예외 발생!", e);
+		}
+		return list;
+	}
+
+
+}

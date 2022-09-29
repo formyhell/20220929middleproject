@@ -1,0 +1,44 @@
+<%@page import="lecreview.vo.LecReviewVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	LecReviewVO rv = (LecReviewVO) request.getAttribute("rv");
+
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>리뷰 정보 상세</title>
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+	<table border="1">
+		<tr>
+			<td>I D</td>
+			<td><%=rv.getLecId() %></td>
+		</tr>
+		<tr>
+			<td>작성날짜: </td>
+			<td><%=rv.getReDate() %></td>
+		</tr>
+		<tr>
+			<td>제목</td>
+			<td><%=rv.getReTitle() %></td>
+		</tr>
+		<tr>
+			<td>내용</td>
+			<td><%=rv.getReContent() %></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<a href="list.do">[목록]</a>
+			<a href="update.do?lecId=<%=rv.getReNum() %>">[리뷰 수정]</a>
+			<a href="delete.do?lecId=<%=rv.getReNum() %>">[리뷰 삭제]</a>
+			</td>
+		</tr>
+	</table>
+<%@ include file="../footer.jsp" %>	
+</body>
+</html>

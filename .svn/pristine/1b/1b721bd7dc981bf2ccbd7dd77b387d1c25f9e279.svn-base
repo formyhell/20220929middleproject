@@ -1,0 +1,97 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	String errMsg = (String)session.getAttribute("errMsg");
+	if(errMsg == null) {
+		errMsg = "";
+	}
+
+%>
+    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<%@ include file="../../header.jsp" %>
+
+<div class="banner text-center">
+  <h3>MY PAGE</h3>
+  <p>마이 페이지 입니다. 내 글을 모아보거나 회원 정보를 관리할 수 있어요!</p>
+</div>
+
+<div class="container-fluid text-center">
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <p><a href="<%=request.getContextPath() %>/MylectureList.do">수강신청 목록</a></p>
+      <p><a href="<%=request.getContextPath() %>/MypagemodifyView.do">회원 정보 수정</a></p>
+      <p><a href="<%=request.getContextPath() %>/DeleteformView.do">회원 탈퇴</a></p>
+    </div>
+    <div class="col-sm-8 text-left"> 
+      <h1>회원 탈퇴 페이지 </h1>
+      <p>_DING에서 탈퇴를 하고 싶으신가요?</p>
+      <hr>
+      <h3>탈퇴를 해봅시다</h3>
+      <p>비밀번호를 입력하세요.</p>
+      
+      <form action="<%=request.getContextPath() %>/delete.do" method="post">
+      
+		<input type="password" name="memPw" class="pw" id="pw1" onchange="check_pw()"><p>
+		<input type="submit" value="확인" class="btn btn-primary" id="pwOk"/>
+      
+      </form>
+      
+    <div id="errMsg" style="color:red"><%=errMsg %></div>
+      
+    </div>
+    
+    	<script>
+	
+		$('#pwOk').click(function(e) {
+			
+			e.preventDefault(); // 폼 전송을 안한다?
+
+			let memPw = $('#pw1').val();
+			$.ajax({
+				type : "POST",
+				url : "<%=request.getContextPath() %>/delete.do",
+				data : "memPw=" + memPw,
+				dataType : "json",
+				success : function(data, textStatus, xhr) {
+					
+					console.log(data);
+					
+					if (data.result == 'fail') {
+						
+						$("#errMsg").text("비밀번호가 올바르지 않습니다.");
+						
+					} else {
+						window.location.href = "<%=request.getContextPath() %>/index.do";
+						console.log("탈퇴 성공했습니다!")
+					} // 여기다가 이렇게 하면 로그인은 됐는데 페이지가 안 넘어간다.. 왜죠  */
+				}, error : function(data, textStatus, xhr) {
+					console.log("에러가 났어요.");
+				}
+			})
+		});
+	</script>
+    
+    <div class="col-sm-2 sidenav">
+      <div class="well">
+        <p>ADS수정</p>
+      </div>
+      <div class="well">
+        <p>ADS</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%@ include file="../../footer.jsp" %>
+
+</body>
+</html>

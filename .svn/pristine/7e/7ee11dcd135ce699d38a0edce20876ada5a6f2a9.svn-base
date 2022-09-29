@@ -1,0 +1,210 @@
+package lecture.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import lecture.vo.LectureVO;
+
+public class LectureDAOImpl implements ILectureDAO {
+
+private static ILectureDAO lecDAO;
+	
+	private LectureDAOImpl() {
+		
+	}
+	
+	public static ILectureDAO getInstance() {
+		if(lecDAO == null) {
+			lecDAO = new LectureDAOImpl();
+		}
+		return lecDAO;
+	}
+	
+	@Override
+	public int insertLecture(SqlMapClient smc, LectureVO lv) {
+		int cnt = 0;
+		
+		try {
+			
+			cnt = smc.update("lecture.insertLecture", lv);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 입력 중 예외발생!", e);
+		}
+		return cnt;
+	}
+
+	@Override
+	public int updateLecture(SqlMapClient smc, LectureVO lv) {
+		
+		int cnt = 0;
+		
+		try {
+			
+			cnt = smc.update("lecture.updateLecture", lv);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 수정 중 예외발생!", e);
+		}
+		return cnt;
+	}
+
+	@Override
+	public int deleteLecture(SqlMapClient smc, String lecId) {
+		
+		int cnt = 0;
+		
+		try {
+			
+			cnt = smc.update("lecture.deleteLecture", lecId);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 삭제 중 예외발생!", e);
+		}
+		return cnt;
+	}
+
+	@Override
+	public List<LectureVO> getAllLectureList(SqlMapClient smc) {
+		
+		List<LectureVO> lecList = new ArrayList<LectureVO>();
+		
+		try {
+			
+			lecList = smc.queryForList("lecture.getLectureAll");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 조회 중 예외발생!", e);
+		}
+		
+		return lecList;
+	}
+	
+	@Override
+	public List<LectureVO> getAllYesLectureList(SqlMapClient smc, String approve) {
+		
+		List<LectureVO> lecList = new ArrayList<LectureVO>();
+		
+		try {
+			
+			lecList = smc.queryForList("lecture.getLectureAllYes");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 조회 중 예외발생!", e);
+		}
+		
+		return lecList;
+	}
+	
+	@Override
+	public List<LectureVO> getAllNoLectureList(SqlMapClient smc, String approve) {
+		
+		List<LectureVO> lecList = new ArrayList<LectureVO>();
+		
+		try {
+			
+			lecList = smc.queryForList("lecture.getLectureAllNo");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 조회 중 예외발생!", e);
+		}
+		
+		return lecList;
+	}
+
+	@Override
+	public boolean checkLecture(SqlMapClient smc, String lecId) {
+		
+		boolean chk = false;
+		
+		try {
+			
+			int cnt = (int)smc.queryForObject("lecture.checkLecture", lecId);
+			
+			if(cnt > 0) {
+				chk = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 중복체크 중 예외발생!", e);
+		}
+		
+		return chk;
+	}
+
+
+	@Override
+	public List<LectureVO> searchLectureList(SqlMapClient smc, LectureVO lv) {
+		
+		List<LectureVO> lecList = new ArrayList<LectureVO>();
+		
+		try {
+			
+			lecList = smc.queryForList("lecture.searchLecture", lv);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 검색 중 예외 발생!", e);
+		}
+		
+		return lecList;
+	}
+
+	@Override
+	public LectureVO getLecture(SqlMapClient smc, String lecId) {
+		
+		LectureVO lv = null;
+		
+		try {
+			lv = (LectureVO)smc.queryForObject("lecture.getLecture", lecId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보조회 중 예외 발생!", e);
+		}
+		
+		return lv;
+	}
+
+	@Override
+	public int updateApprove(SqlMapClient smc, LectureVO lv) {
+
+		int cnt = 0;
+		
+		try {
+			
+			cnt = smc.update("lecture.updateApprove", lv);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 수정 중 예외발생!", e);
+		}
+		return cnt;
+	}
+
+	@Override
+	public List<LectureVO> getCateLectureList(SqlMapClient smc) {
+		
+		List<LectureVO> lecList = new ArrayList<LectureVO>();
+		
+		try {
+			
+			lecList = smc.queryForList("lecture.getCateLectureLsit");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("강의정보 검색 중 예외 발생!", e);
+		}
+		
+		return lecList;
+	}
+}

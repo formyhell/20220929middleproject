@@ -1,0 +1,103 @@
+package member.service;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import member.dao.IMemberDAO;
+import member.dao.MemberDAOImpl;
+import member.vo.MemberVO;
+import util.SqlMapClientFactory;
+
+public class MemberServiceImpl implements IMemberService{
+	
+	private static IMemberService memService;
+	// 인터페이스로 코딩하는 게 좋은 습관임
+	
+	private SqlMapClient smc;
+	
+	private IMemberDAO memDAO;
+	
+	private MemberServiceImpl() {
+		memDAO = MemberDAOImpl.getInstance();
+		smc = SqlMapClientFactory.getInstance();
+	}
+	
+	public static IMemberService getInstance() {
+		if(memService == null) {
+			memService = new MemberServiceImpl();
+		}
+		
+		return memService;
+	}
+	
+	// 추상메서드 오버라이드 해주기
+
+	@Override
+	public int insertMember(MemberVO mv) {
+		
+		int cnt = 0;
+		
+		try {
+			smc.startTransaction(); // 트랙잭션 시작
+			
+			cnt = memDAO.insertMember(smc, mv);
+			
+			smc.commitTransaction(); // 커밋
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				smc.endTransaction(); // 트랜잭션 끝...
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} // 예외가 발생하지 않든 예외가 발생하지 않든 end Transaction해준다.
+		}
+		
+		return cnt;
+	}
+
+	@Override
+	public int updateMember(MemberVO mv) {
+		return memDAO.updateMember(smc, mv);
+	}
+
+	@Override
+	public int deleteMember(String memId) {
+		return memDAO.deleteMember(smc, memId);
+	}
+
+	@Override
+	public List<MemberVO> getAllMemberList() {
+		return memDAO.getAllMemberList(smc);
+	}
+
+	@Override
+	public boolean checkMember(String memId) {
+		return memDAO.checkMember(smc, memId);
+	}
+
+	@Override
+	public List<MemberVO> searchMemberList(MemberVO mv) { 
+		return memDAO.searchMemberList(smc, mv);
+	}
+
+	@Override
+	public MemberVO getMember(String memId) {
+		return memDAO.getMember(smc, memId);
+	}
+
+	@Override
+	public MemberVO memberLogin(String memMail, String memPw) {
+		return memDAO.memberLogin(smc, memMail, memPw);
+	}
+
+	@Override
+	public MemberVO checkYN(String memMail) {
+		return memDAO.checkYN(smc, memMail);
+	}
+
+}

@@ -1,0 +1,41 @@
+package member.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+
+@WebServlet("/member/logout.do")
+public class LogoutMemberController extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		resp.setContentType("text/html;charset=UTF-8");
+		
+		PrintWriter out = resp.getWriter();
+		
+		HttpSession session = req.getSession(false); // 왜 false?
+		if(session != null && session.getAttribute("memMail") != null) {
+			session.invalidate();
+			System.out.println("로그아웃에 성공했어요!");
+			
+			String redirectUrl = req.getContextPath() + "/index.do"; // 로그아웃 성공하면 띄워주는 페이지임.
+			// getContextPath : 서블릿컨텍스트의 이름을 가져오는 메소드
+			resp.sendRedirect(redirectUrl);
+			
+		} else {
+			out.print("현재 로그인 상태가 아닙니다.");
+		}
+		
+		out.close();
+		
+	}
+
+}

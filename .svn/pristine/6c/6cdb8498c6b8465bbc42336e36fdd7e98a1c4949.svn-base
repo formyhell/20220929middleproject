@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="lecReview">
+
+<!-- 
+	이 영역에 sql문에 맞는 태그를 사용하여 SQL문을 기술한다.
+	
+	사용할 수 있는 기본적인 태그들
+		<select> ~~~</select>
+		<insert> ~~~</insert>
+		<update> ~~~</update>
+		<delete> ~~~</delete>
+	
+	위 태그에서 사용되는 속성들
+      1) id속성	: 해당 태그를 호출할 때 <sqlMap>태그의 namespace와 연결하여 사용하는 이름
+      2) parameterClass : sql문에 사용할 데이터가 들어있는 객체 타입을 지정
+   						(보통 VO클래스, 자바의 자료형이름 등이 사용된다.) 써주는게 정석인데 생략가능
+   						(typeAlias로 지정한 alias명을 사용할 수 있다.)
+	  3) resultClass 속성 : select문을 실행한 결과를 담을 객체를 지정한다.
+	  					(보통 VO클래스나 자바의 자료형 이름을 사용한다.) 
+   						(typeAlias로 지정한 alias명을 사용할 수 있다.)
+	  4) resultMap 속성 : 결과 레코드 컬럼명과 VO객체의 property명이 다를 경우에 적절한 매핑을 위해 사용한다.
+ -->
+	<insert id="insertLecReview" parameterClass="reVO">
+
+		insert into lecture_review
+		(re_num,re_title, re_content, satisfaction, re_date)
+			values (review_no_seq.nextval, #reTitle#, #reContent#, #satisfaction#, sysdate) <!-- iBatis가 알아서 lv.getLecId 
+			호출함 -->
+
+	</insert>
+
+	<!-- <select id="checkID" parameterClass="String" resultClass="int"> select 
+		* from member where mem_mail = #memMail# </select> -->
+
+
+	<update id="updateLecReview" parameterClass="reVO">
+		update lecture_review
+		set re_title = #reTitle#,
+			re_content = #reContent#
+		where re_num = #reNum#
+	</update>
+
+
+	<delete id="deleteLecReview" parameterClass="int">
+		delete from lecture_review
+		where re_num = #reNum#
+	</delete>
+
+
+	<!-- 방법2 -->
+
+	<resultMap class="reVO" id="reMap">
+		<result property="reNum" column="re_num" />
+		<result property="lecId" column="lecture_id" />
+		<result property="reTitle" column="re_title" />
+		<result property="reContent" column="re_content" />
+		<result property="satisfaction" column="satisfaction" />
+		<result property="reDate" column="re_date" />
+	</resultMap>
+
+	<select id="getLecReviewAll" resultMap="reMap">
+		
+		select *
+		from lecture_review
+		order by 1 desc
+
+	</select>
+
+	<select id="getLecReview" parameterClass="int" resultMap="reMap">
+		<!-- parameterClass생략가능 -->
+
+		select *
+		from lecture_review
+		where re_num = #reNum#
+
+
+	</select>
+
+	<select id="searchLecReview" parameterClass="reVO"
+		resultMap="reMap">
+
+		select * from lecture_review 
+			where re_title like '%' || #reTitle# || '%'
+				or re_content like '%' || #reContent# || '%'
+
+		<isNotEmpty property="reTitle">
+			and re_title = #reTitle#
+		</isNotEmpty>
+		
+
+	</select>
+
+</sqlMap>			
+
+

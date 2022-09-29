@@ -1,0 +1,86 @@
+package qna.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import coment.service.IComentService;
+import coment.service.comentServiceImpl;
+import coment.vo.comentVO;
+import lecture.service.ILectureService;
+import lecture.service.LectureServiceImpl;
+import lecture.vo.LectureVO;
+import qna.service.IQnaService;
+import qna.service.qnaServiceImpl;
+import qna.vo.qnaVO;
+
+/**
+ * Servlet implementation class qnaDetailController
+ */
+@WebServlet("/moreQnaDetail.do")
+public class moreQnaDetailController extends HttpServlet {
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		int qnaNo = Integer.parseInt(request.getParameter("qnaNo"));
+		String lecId = request.getParameter("lecId");
+		
+		// 1. 서비스 객체 생성하기
+		IQnaService qnaService = qnaServiceImpl.getInstance();
+		ILectureService lecService = LectureServiceImpl.getinstance();
+		IComentService comentService = comentServiceImpl.getInstance();
+		
+		// 2. 문의글 상세 조회
+		qnaVO qv = qnaService.getQna(qnaNo);
+		LectureVO lv = lecService.getLecture(lecId);
+		List<comentVO> comentList = comentService.getAllComentList(qnaNo);
+		
+//		if(qv.getAtchFileId() > 0) { // 첨부파일 존재하는 경우
+//			// 2-1. 첨부파일 목록 조회
+//			AtchFileVO fileVO = new AtchFileVO();
+//			fileVO.setAtchFileId(qv.getAtchFileId());
+//			
+//			List<AtchFileVO> atchFileList = fileService.getAtchFileList(fileVO);
+//			
+//			req.setAttribute("atchFileList", atchFileList);
+//		}
+		
+		request.setAttribute("qv", qv);
+		request.setAttribute("lv", lv);
+		request.setAttribute("comentList", comentList);
+		
+		request.getRequestDispatcher("/WEB-INF/jsp/qna/more-post.jsp").forward(request, response);
+		
+	}
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String comentContent = request.getParameter("comentContent");
+		String lecId = request.getParameter("lecId");
+		int qnaNo = Integer.parseInt(request.getParameter("qnaNo"));
+	
+		
+		IComentService comentService = comentServiceImpl.getInstance();
+		
+		comentVO coVO = new comentVO();
+		coVO.setComentContent(comentContent);
+		coVO.setQnaNo(qnaNo);
+		coVO.setLectureId("a001");
+		coVO.setMemMail("test2@test2.com");
+		
+		
+		int cnt = comentService.insertComent(coVO);
+		
+		
+		String redirctUrl = request.getContextPath() + "/moreQnaDetail.do?qnaNo=" + qnaNo + "&lecId=" + lecId;
+		response.sendRedirect(redirctUrl);
+		
+	}
+
+}

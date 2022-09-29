@@ -1,0 +1,20 @@
+package wishlist.dao;
+
+import java.util.List;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import qna.vo.qnaVO;
+import wishlist.vo.wishlistVO;
+
+
+public interface IWishlistDAO {
+	
+	public int insertWishlist(SqlMapClient smc, wishlistVO wishVO);
+	
+	public int deleteWishlist(SqlMapClient smc, String memMail);
+	
+	public List<wishlistVO> getWishlist(SqlMapClient smc, String memMail);
+	
+	
+}

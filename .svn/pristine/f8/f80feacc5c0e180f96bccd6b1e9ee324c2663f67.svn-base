@@ -1,0 +1,503 @@
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+<meta charset="utf-8">
+<title>Nest - Multipurpose eCommerce HTML Template</title>
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="">
+<meta property="og:type" content="">
+<meta property="og:url" content="">
+<meta property="og:image" content="">
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/x-icon"
+	href="assets/imgs/theme/favicon.svg">
+<!-- Template CSS -->
+<link rel="stylesheet" href="assets/css/main.css?v=5.2">
+</head>
+
+<body>
+<%@ include file="../WEB-INF/jsp/header.jsp" %>
+	<main class="main">
+		<div class="page-header breadcrumb-wrap">
+			<div class="container">
+				<div class="breadcrumb">
+					<a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+					<span></span> Shop <span></span> Cart
+				</div>
+			</div>
+		</div>
+		<div class="container mb-80 mt-50">
+			<div class="row">
+				<div class="col-lg-8 mb-40">
+					<h1 class="heading-2 mb-10">Your Cart</h1>
+					<div class="d-flex justify-content-between">
+						<h6 class="text-body">
+							There are <span class="text-brand">3</span> products in your cart
+						</h6>
+						<h6 class="text-body">
+							<a href="#" class="text-muted"><i class="fi-rs-trash mr-5"></i>Clear
+								Cart</a>
+						</h6>
+					</div>
+				</div>
+			</div>
+			<input type="hidden" name="cmd" value="order">
+            <div class="basketdiv" id="basket">
+                <div class="row head">
+                    <div class="subdiv">
+                        <div class="check">선택</div>
+                        <div class="pname">상품명</div>
+                    </div>
+                    <div class="subdiv">
+                        <div class="basketprice">가격</div>
+                    </div>
+                    <div class="subdiv">
+    
+                        <div class="basketcmd">삭제</div>
+                    </div>
+                    <div class="split"></div>
+                </div>
+        
+                <div class="row data">
+                    <div class="subdiv">
+                        <div class="check"><input type="checkbox" name="buy" value="260" onclick="javascript:basket.checkItem();">&nbsp;</div>
+                        <div class="pname">
+                            <span>파이썬을 쉽고 재미있게</span>
+                        </div>
+                    </div>
+                    <div class="subdiv">
+                        <div class="basketprice"><input type="hidden" name="p_price" id="p_price1" class="p_price" value="100">100원</div>
+                        <div class="num">
+                            <div class="updown">
+                                <input type="text" name="p_num1" id="p_num1" size="2" maxlength="3" class="p_num" value="1" disabled = "disabled" onkeyup="javascript:basket.changePNum(1);">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="subdiv">
+                        <div class="basketcmd"><a href="javascript:void(0)" class="abutton" onclick="javascript:basket.delItem();">삭제</a></div>
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="subdiv">
+                        <div class="check"><input type="checkbox" name="buy" value="261" onclick="javascript:basket.checkItem();">&nbsp;</div>
+<!--                         <div class="img"><img src="./img/basket2.jpg" width="60"></div> -->
+                        <div class="pname">
+                            <span>스프링 완전정복</span>
+                        </div>
+                    </div>
+                    <div class="subdiv">
+                        <div class="basketprice"><input type="hidden" name="p_price" id="p_price2" class="p_price" value="300">300원</div>
+                        <div class="num">
+                            <div class="updown">
+                                <input type="text" name="p_num2" id="p_num2" size="2" maxlength="4" class="p_num" value="1" disabled = "disabled" onkeyup="javascript:basket.changePNum(2);">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="subdiv">
+                        <div class="basketcmd"><a href="javascript:void(0)" class="abutton" onclick="javascript:basket.delItem();">삭제</a></div>
+                    </div>
+                </div>
+                <div class="row data">
+                    <div class="subdiv">
+                        <div class="check"><input type="checkbox" name="buy" value="262" onclick="javascript:basket.checkItem();">&nbsp;</div>
+<!--                         <div class="img"><img src="./img/basket3.jpg" width="60"></div> -->
+                        <div class="pname">
+                            <span>자바스크립트를 배우기 쉽게 초보탈출</span>
+                        </div>
+                    </div>
+                    <div class="subdiv">
+                        <div class="basketprice"><input type="hidden" name="p_price" id="p_price3" class="p_price" value="200">200원</div>
+                        <div class="num">
+                            <div class="updown">
+                                <input type="text" name="p_num3" id="p_num3" size="2" maxlength="4" class="p_num" value="1" disabled = "disabled" onkeyup="javascript:basket.changePNum(3);">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="subdiv">
+                        <div class="basketcmd"><a href="javascript:void(0)" class="abutton" onclick="javascript:basket.delItem();">삭제</a></div>
+                    </div>
+                </div>
+        
+            </div>
+    
+            <div class="right-align basketrowcmd">
+                <a href="javascript:void(0)" class="abutton" onclick="javascript:basket.delCheckedItem();">선택상품삭제</a>
+                <a href="javascript:void(0)" class="abutton" onclick="javascript:basket.delAllItem();">장바구니비우기</a>
+            </div>
+    
+            <div class="bigtext right-align sumcount" id="sum_p_num">상품갯수: 0개</div>
+            <div class="bigtext right-align box blue summoney" id="sum_p_price">합계금액: 0원</div>
+    
+            <div id="goorder" class="">
+                <div class="clear"></div>
+                <div class="buttongroup center-align cmd">
+                </div>
+            </div>
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="table-responsive shopping-summery">
+						<table class="table table-wishlist">
+							<thead>
+								<tr class="main-heading">
+									<th class="custome-checkbox start pl-30">
+									<input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="">
+									<label class="form-check-label" for="exampleCheckbox11">
+									</label>
+									</th>
+									<th scope="col" colspan="2">Product</th>
+									<th scope="col">Unit Price</th>
+									<th scope="col" class="end">Remove</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="pt-30">
+									<td class="custome-checkbox pl-30"><input
+										class="form-check-input" type="checkbox" name="checkbox"
+										id="exampleCheckbox1" value=""> <label
+										class="form-check-label" for="exampleCheckbox1"></label></td>
+									<td class="image product-thumbnail pt-40"><img
+										src="assets/imgs/shop/product-1-1.jpg" alt="#"></td>
+									<td class="product-des product-name">
+										<h6 class="mb-5">
+											<a class="product-name mb-10 text-heading"
+												href="shop-product-right.html">Field Roast Chao Cheese
+												Creamy Original</a>
+										</h6>
+										<div class="product-rate-cover">
+											<div class="product-rate d-inline-block">
+												<div class="product-rating" style="width: 90%"></div>
+											</div>
+											<span class="font-small ml-5 text-muted"> (4.0)</span>
+										</div>
+									</td>
+									<td class="price" data-title="Price">
+										<h4 class="text-body">$2.51</h4>
+									</td>
+									<td class="action text-center" data-title="Remove"><a
+										href="#" class="text-body"><i class="fi-rs-trash"></i></a></td>
+								</tr>
+								<tr>
+									<td class="custome-checkbox pl-30"><input
+										class="form-check-input" type="checkbox" name="checkbox"
+										id="exampleCheckbox2" value=""> <label
+										class="form-check-label" for="exampleCheckbox2"></label></td>
+									<td class="image product-thumbnail"><img
+										src="assets/imgs/shop/product-2-1.jpg" alt="#"></td>
+									<td class="product-des product-name">
+										<h6 class="mb-5">
+											<a class="product-name mb-10 text-heading"
+												href="shop-product-right.html">Blue Diamond Almonds
+												Lightly Salted</a>
+										</h6>
+										<div class="product-rate-cover">
+											<div class="product-rate d-inline-block">
+												<div class="product-rating" style="width: 90%"></div>
+											</div>
+											<span class="font-small ml-5 text-muted"> (4.0)</span>
+										</div>
+									</td>
+									<td class="price" data-title="Price">
+										<h4 class="text-body">$3.2</h4>
+									</td>
+									<td class="action text-center" data-title="Remove"><a
+										href="#" class="text-body"><i class="fi-rs-trash"></i></a></td>
+								</tr>
+								<tr>
+									<td class="custome-checkbox pl-30"><input
+										class="form-check-input" type="checkbox" name="checkbox"
+										id="exampleCheckbox3" value=""> <label
+										class="form-check-label" for="exampleCheckbox3"></label></td>
+									<td class="image product-thumbnail"><img
+										src="assets/imgs/shop/product-3-1.jpg" alt="#"></td>
+									<td class="product-des product-name">
+										<h6 class="mb-5">
+											<a class="product-name mb-10 text-heading"
+												href="shop-product-right.html">Fresh Organic Mustard
+												Leaves Bell Pepper</a>
+										</h6>
+										<div class="product-rate-cover">
+											<div class="product-rate d-inline-block">
+												<div class="product-rating" style="width: 90%"></div>
+											</div>
+											<span class="font-small ml-5 text-muted"> (4.0)</span>
+										</div>
+									</td>
+									<td class="price" data-title="Price">
+										<h4 class="text-body">$2.43</h4>
+									</td>
+									<td class="action text-center" data-title="Remove"><a
+										href="#" class="text-body"><i class="fi-rs-trash"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="divider-2 mb-30"></div>
+					<div class="cart-action d-flex justify-content-between">
+						<a class="btn "><i class="fi-rs-arrow-left mr-10"></i>Continue
+							Shopping</a>
+					</div>
+					<div class="row mt-50">
+						<div class="col-lg-7">
+							<div class="calculate-shiping p-40 border-radius-15 border">
+								<h4 class="mb-10">Calculate Shipping</h4>
+								<p class="mb-30">
+									<span class="font-lg text-muted">Flat rate:</span><strong
+										class="text-brand">5%</strong>
+								</p>
+								<form class="field_form shipping_calculator">
+									<div class="form-row">
+										<div class="form-group col-lg-12">
+											<div class="custom_select">
+												<select class="form-control select-active w-100">
+													<option value="">United Kingdom</option>
+													<option value="KP">North Korea</option>
+													<option value="KR">South Korea</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="form-row row">
+										<div class="form-group col-lg-6">
+											<input required="required" placeholder="State / Country"
+												name="name" type="text">
+										</div>
+										<div class="form-group col-lg-6">
+											<input required="required" placeholder="PostCode / ZIP"
+												name="name" type="text">
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="col-lg-5">
+							<div class="p-40">
+								<h4 class="mb-10">Apply Coupon</h4>
+								<p class="mb-30">
+									<span class="font-lg text-muted">Using A Promo Code? 
+								</p>
+								<form action="#">
+									<div class="d-flex justify-content-between">
+										<input class="font-medium mr-15 coupon" name="Coupon"
+											placeholder="Enter Your Coupon">
+										<button class="btn">
+											<i class="fi-rs-label mr-10"></i>Apply
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="border p-md-4 cart-totals ml-30">
+						<div class="table-responsive">
+							<table class="table no-border">
+								<tbody>
+									<tr>
+										<td class="cart_total_label">
+											<h6 class="text-muted">Subtotal</h6>
+										</td>
+										<td class="cart_total_amount">
+											<h4 class="text-brand text-end">$12.31</h4>
+										</td>
+									</tr>
+									<tr>
+										<td scope="col" colspan="2">
+											<div class="divider-2 mt-10 mb-10"></div>
+										</td>
+									</tr>
+									<tr>
+										<td class="cart_total_label">
+											<h6 class="text-muted">Shipping</h6>
+										</td>
+										<td class="cart_total_amount">
+											<h5 class="text-heading text-end">
+												Free
+												</h4>
+										</td>
+									</tr>
+									<tr>
+										<td class="cart_total_label">
+											<h6 class="text-muted">Estimate for</h6>
+										</td>
+										<td class="cart_total_amount">
+											<h5 class="text-heading text-end">
+												United Kingdom
+												</h4>
+										</td>
+									</tr>
+									<tr>
+										<td scope="col" colspan="2">
+											<div class="divider-2 mt-10 mb-10"></div>
+										</td>
+									</tr>
+									<tr>
+										<td class="cart_total_label">
+											<h6 class="text-muted">Total</h6>
+										</td>
+										<td class="cart_total_amount">
+											<h4 class="text-brand text-end">$12.31</h4>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<a href="#" class="btn mb-20 w-100">Proceed To CheckOut<i
+							class="fi-rs-sign-out ml-15"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<!-- Preloader Start -->
+	<div id="preloader-active">
+		<div
+			class="preloader d-flex align-items-center justify-content-center">
+			<div class="preloader-inner position-relative">
+				<div class="text-center">
+					<img src="assets/imgs/theme/loading.gif" alt="">
+				</div>
+			</div>
+		</div>
+	</div>
+<%@ include file="../WEB-INF/jsp/footer.jsp" %>
+	<script>
+		var sum = 0;
+		let basket = {
+			totalCount : 0,
+			totalPrice : 0,
+			//체크한 장바구니 상품 비우기
+			delCheckedItem : function() {
+				document.querySelectorAll("input[name=buy]:checked").forEach(
+						function(item) {
+							item.parentElement.parentElement.parentElement
+									.remove();
+						});
+				//AJAX 서버 업데이트 전송
+
+				//전송 처리 결과가 성공이면
+				this.reCalc();
+				this.updateUI();
+			},
+			//장바구니 전체 비우기
+			delAllItem : function() {
+				document.querySelectorAll('.row.data').forEach(function(item) {
+					item.remove();
+				});
+				//AJAX 서버 업데이트 전송
+
+				//전송 처리 결과가 성공이면
+				this.totalCount = 0;
+				this.totalPrice = 0;
+				this.reCalc();
+				this.updateUI();
+			},
+			//재계산
+			reCalc : function() {
+				this.totalCount = 0;
+				this.totalPrice = 0;
+				document
+						.querySelectorAll(".p_num")
+						.forEach(
+								function(item) {
+									if (item.parentElement.parentElement.parentElement.previousElementSibling.firstElementChild.firstElementChild.checked == true) {
+										var count = parseInt(item
+												.getAttribute('value'));
+										this.totalCount += count;
+										var price = item.parentElement.parentElement.previousElementSibling.firstElementChild
+												.getAttribute('value');
+										this.totalPrice += count * price;
+										sum = this.totalPrice;
+									}
+								}, this); // forEach 2번째 파라메터로 객체를 넘겨서 this 가 객체리터럴을 가리키도록 함. - thisArg
+			},
+			//화면 업데이트
+			updateUI : function() {
+				document.querySelector('#sum_p_num').textContent = '상품갯수: '
+						+ this.totalCount.formatNumber() + '개';
+				document.querySelector('#sum_p_price').textContent = '합계금액: '
+						+ this.totalPrice.formatNumber() + '원';
+				document.querySelector('#sum_t_num').textContent = '총 결제금액: '
+						+ this.totalPrice.formatNumber() + '원';
+			},
+			//개별 수량 변경
+			changePNum : function(pos) {
+				var item = document.querySelector('input[name=p_num' + pos
+						+ ']');
+				var newval = event.target.classList.contains('up') ? p_num + 1
+						: event.target.classList.contains('down') ? p_num - 1
+								: event.target.value;
+
+				if (parseInt(newval) < 1 || parseInt(newval) > 99) {
+					return false;
+				}
+
+				item.setAttribute('value', newval);
+				item.value = newval;
+
+				var price = item.parentElement.parentElement.previousElementSibling.firstElementChild
+						.getAttribute('value');
+				item.parentElement.parentElement.nextElementSibling.textContent = (newval * price)
+						.formatNumber()
+						+ "원";
+				//AJAX 업데이트 전송
+
+				//전송 처리 결과가 성공이면    
+				this.reCalc();
+				this.updateUI();
+			},
+			checkItem : function() {
+				this.reCalc();
+				this.updateUI();
+			},
+			delItem : function() {
+				event.target.parentElement.parentElement.parentElement.remove();
+				this.reCalc();
+				this.updateUI();
+			}
+		}
+
+		// 숫자 3자리 콤마찍기
+		Number.prototype.formatNumber = function() {
+			if (this == 0)
+				return 0;
+			let regex = /(^[+-]?\d+)(\d{3})/;
+			let nstr = (this + '');
+			while (regex.test(nstr))
+				nstr = nstr.replace(regex, '$1' + ',' + '$2');
+			return nstr;
+		};
+	</script>
+	<!-- Vendor JS-->
+	<script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+	<script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+	<script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+	<script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+	<script src="assets/js/plugins/slick.js"></script>
+	<script src="assets/js/plugins/jquery.syotimer.min.js"></script>
+	<script src="assets/js/plugins/wow.js"></script>
+	<script src="assets/js/plugins/jquery-ui.js"></script>
+	<script src="assets/js/plugins/perfect-scrollbar.js"></script>
+	<script src="assets/js/plugins/magnific-popup.js"></script>
+	<script src="assets/js/plugins/select2.min.js"></script>
+	<script src="assets/js/plugins/waypoints.js"></script>
+	<script src="assets/js/plugins/counterup.js"></script>
+	<script src="assets/js/plugins/jquery.countdown.min.js"></script>
+	<script src="assets/js/plugins/images-loaded.js"></script>
+	<script src="assets/js/plugins/isotope.js"></script>
+	<script src="assets/js/plugins/scrollup.js"></script>
+	<script src="assets/js/plugins/jquery.vticker-min.js"></script>
+	<script src="assets/js/plugins/jquery.theia.sticky.js"></script>
+	<script src="assets/js/plugins/jquery.elevatezoom.js"></script>
+	<!-- Template  JS -->
+	<script src="./assets/js/main.js?v=5.2"></script>
+	<script src="./assets/js/shop.js?v=5.2"></script>
+	
+</body>
+
+</html>

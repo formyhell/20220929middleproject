@@ -1,0 +1,65 @@
+package jobposting.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import admin.service.AdminServiceImpl;
+import admin.service.IAdminService;
+import admin.vo.AdminVO;
+import jobposting.service.IPostService;
+import jobposting.service.PostServiceImpl;
+import jobposting.vo.PostVO;
+
+/**
+ * Servlet implementation class InsertQnaController1
+ */
+@WebServlet("/insertPost.do")
+public class InsertPostController extends HttpServlet {
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		req.getRequestDispatcher("/WEB-INF/jsp/jobpost/postInsert.jsp").forward(req, resp);
+
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// 1. 요청 파라미터 정보 가져오기
+		String postTitle = req.getParameter("postTitle");
+		String postContent = req.getParameter("postContent");
+		AdminVO av = new AdminVO();
+	
+		// HTTP 요청의 파라미터 값을 얻기 위해 사용하는 것이 request.getParameter() 메소드
+		
+		// 2.서비스 객체 생성
+		IPostService postingService = PostServiceImpl.getInstance();
+		
+		// 3. 회원정보 등록
+		PostVO pv = new PostVO();
+		pv.setPostTitle(postTitle);
+		pv.setPostContent(postContent);
+		
+		int cnt = postingService.insertPost(pv);
+		
+		String msg = "";
+		
+		if(cnt > 0) {
+			msg = "성공";
+		} else {
+			msg = "실패";
+		}		
+		String redirctUrl = req.getContextPath() + "/listPost.do";
+		resp.sendRedirect(redirctUrl);
+		
+		
+	}
+
+}

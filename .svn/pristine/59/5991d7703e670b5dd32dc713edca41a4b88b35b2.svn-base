@@ -1,0 +1,85 @@
+package pay.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import cart.vo.CartVO;
+import pay.dao.IOrderDAO;
+import pay.dao.OrderDAOImpl;
+import pay.vo.OrderVO;
+import util.SqlMapClientFactory;
+
+public class OrderServiceImpl implements IOrderService{
+	
+	private static IOrderService service;
+	private static IOrderDAO dao;
+	private SqlMapClient smc;
+	
+	private OrderServiceImpl() {
+		dao = OrderDAOImpl.getInstance();
+		smc = SqlMapClientFactory.getInstance();
+	}
+	
+	public static IOrderService getInstance() {
+		if(service == null) {
+			service = new OrderServiceImpl();
+		}
+		return service;
+	}
+	
+	@Override
+	public long insertOrder(OrderVO pv) {
+		long cnt = 0;
+		try {
+			smc.startTransaction();
+			cnt = dao.insertOrder(smc, pv);
+			smc.commitTransaction();
+		} catch (SQLException e) {
+			try {
+				smc.endTransaction();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+	@Override
+	public int updateOrder(OrderVO pv) {
+		return dao.updateOrder(smc, pv);
+	}
+
+	@Override
+	public int deleteOrder(String orderId) {
+		return dao.deleteOrder(smc, orderId);
+	}
+
+	@Override
+	public List<OrderVO> getAllOrderList() {
+		return dao.getAllOrderList(smc);
+	}
+
+	@Override
+	public boolean checkOrder(String orderId) {
+		return dao.checkOrder(smc, orderId);
+	}
+
+	@Override
+	public OrderVO getOrder(String orderId) {
+		return dao.getOrder(smc, orderId);
+	}
+
+	@Override
+	public List<OrderVO> searchOrderList(OrderVO pv) {
+		return dao.getAllOrderList(smc);
+	}
+
+	@Override
+	public List<CartVO> getClass(String memMail) {
+		return dao.getClass(smc, memMail);
+	}
+	
+}

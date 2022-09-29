@@ -1,0 +1,48 @@
+package cart.controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import cart.service.CartServiceImpl;
+import cart.service.ICartService;
+import cart.vo.CartVO;
+import lecture.vo.LectureVO;
+
+@WebServlet("/cart/insert.do")
+public class insertCartController extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("/WEB_INF/jsp/cart/shop-cart.jsp").forward(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		HttpSession session = req.getSession();
+		ArrayList<LectureVO> cartList = (ArrayList<LectureVO>)session.getAttribute("cartlist");
+		
+		ICartService service = CartServiceImpl.getInstance();
+		
+		String orderId = req.getParameter("payId");
+				
+		for(int i=0;i<cartList.size();i++) {			
+			String lectureId = cartList.get(i).getLecId();
+			
+			CartVO cv = new CartVO();
+			cv.setOrderId(orderId);
+			cv.setLectureId(lectureId);
+			
+			int cnt = (int)service.insertCart(cv);
+		}
+	}
+	
+	
+}

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="freeBoard">			
+
+	<insert id="insertFreeBoard" parameterClass="freeVO">
+		insert into freeboard
+		(free_num, mem_mail, free_title, free_content ,free_date) 
+			values (freeboard_no_seq.nextval, #memMail#, #freeTitle#, #freeContent#, sysdate)
+	</insert>
+	
+	<update id="updateFreeBoard" parameterClass="freeVO">
+		update freeboard 
+		set free_title = #freeTitle#,
+			free_content = #freeContent#
+		where free_num = #freeNum#
+	</update>
+	
+	<delete id="deleteFreeBoard" parameterClass="String">
+		delete * from freeboard 
+		where free_num = #freeNum#
+    </delete>
+
+
+
+	<resultMap id="freeMap" class="freeVO">
+		<result property="freeNum" column="FREE_NUM" />
+		<result property="freeTitle" column="FREE_TITLE" />
+		<result property="freeContent" column="FREE_CONTENT" />
+		<result property="freeDate" column="FREE_DATE" />
+		<result property="freeHits" column="FREE_HITS" />
+		<result property="memMail" column="MEM_MAIL" />
+	</resultMap>
+	
+	<select id="getFreeBoardAll" resultMap="freeMap">
+		select * 
+		from freeboard
+		order by 1 desc
+	</select>
+	
+	<select id="getFreeBoard" parameterClass="String" resultMap="freeMap">
+		select *
+		from freeboard
+		where free_num = #freeNum#
+	</select>
+
+	
+	<select id="searchFreeBoard" parameterClass="freeVO" resultMap="freeMap">
+		select * 
+		from freeboard 
+		where FREE_TITLE like '%' || #freeTitle# || '%' 
+			or FREE_CONTENT like '%' || #freeContent# || '%'
+			
+	<isNotEmpty property="freeTitle">
+	
+	</isNotEmpty>
+	<isNotEmpty property="freeContent">
+	
+	</isNotEmpty>
+	
+	</select>
+
+</sqlMap>			
+
+
+
+
+

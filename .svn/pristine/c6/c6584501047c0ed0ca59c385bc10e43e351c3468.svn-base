@@ -1,0 +1,45 @@
+<%@page import="freeboard.vo.FreeBoardVO"%>
+<%@page import="lecreview.vo.LecReviewVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	FreeBoardVO fv = (FreeBoardVO) request.getAttribute("fv");
+
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>자유게시글 정보 상세</title>
+</head>
+<body>
+<%@ include file="../header.jsp" %>
+	<table border="1">
+		<tr>
+			<td>I D</td>
+			<td><%=fv.getMemMail() %></td>
+		</tr>
+		<tr>
+			<td>작성날짜: </td>
+			<td><%=fv.getFreeDate() %></td>
+		</tr>
+		<tr>
+			<td>제목</td>
+			<td><%=fv.getFreeTitle() %></td>
+		</tr>
+		<tr>
+			<td>내용</td>
+			<td><%=fv.getFreeContent() %></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<a href="list.do">[목록]</a>
+			<a href="update.do?freenum=<%=fv.getFreeNum() %>">[게시글 수정]</a>
+			<a href="delete.do?freenum=<%=fv.getFreeNum() %>">[게시글 삭제]</a>
+			</td>
+		</tr>
+	</table>
+<%@ include file="../footer.jsp" %>	
+</body>
+</html>

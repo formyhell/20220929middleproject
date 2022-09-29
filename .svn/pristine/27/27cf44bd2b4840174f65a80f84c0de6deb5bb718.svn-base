@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="admin">			
+<!-- 
+	<insert id="insertPost" parameterClass="PostVO">
+		insert into job_posting (admin_id,
+						job_no,
+						job_title,
+						job_content) 
+		values (#adminId#, post_no_seq.nextval, #postTitle#, #postContent#)
+	</insert>
+	
+	<update id="updatePost" parameterClass="PostVO">
+		update job_posting set post_title=#postTitle#, post_content=#postContent# where post_no=#postNo#
+	</update>
+	
+	<delete id="deletePost" parameterClass="int">
+		delete from job_posting where post_no=#postNo#
+    </delete> -->
+
+	<resultMap id="adminMap" class="AdminVO">
+		<result property="adminId" 	column="admin_id" />
+		<result property="adminPw"  column="admin_pw" />
+	</resultMap>
+	<resultMap id="instructorMap" class="instructorVO">
+		<result property="instructorId" 	column="instructor_id" />
+		<result property="memMail"  		column="mem_mail" />
+		<result property="teachTel"  		column="teach_tel" />
+		<result property="teachSubject"  	column="teach_subject" />
+		<result property="teachIntrod"  	column="teach_introd" />
+		<result property="teachLink"  		column="teach_link" />
+	</resultMap>
+	
+	<select id="getAdminId" resultMap="adminMap">
+		select * from admin
+	</select>
+	<select id="getSellerList" resultMap="instructorMap">
+		select * from instructor
+	</select>
+
+</sqlMap>			
+
+
+
+
+

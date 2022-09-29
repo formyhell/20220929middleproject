@@ -1,0 +1,145 @@
+package lecture.file.service;
+
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+import lecture.file.dao.AtchFileDAOImpl;
+import lecture.file.dao.IAtchFileDAO;
+import lecture.file.vo.AtchFileVO;
+import util.SqlMapClientFactory;
+
+public class IAtchFileServiceImpl implements IAtchFileService {
+	
+	private static IAtchFileService service;
+	private SqlMapClient smc;
+	private IAtchFileDAO fileDao;
+	
+	private static final String UPLOAD_DIR = "D:\\A_TeachingMaterial\\04_MiddelProject\\workspace\\DING\\WebContent\\video";
+	
+	private  IAtchFileServiceImpl() {
+		fileDao = AtchFileDAOImpl.getInstance();
+		smc = SqlMapClientFactory.getInstance();
+	}
+	
+	
+	public static IAtchFileService getInstance() {
+		if(service == null) {
+			service = new IAtchFileServiceImpl();
+		}
+		
+		return service;
+	}
+
+	@Override
+	   public AtchFileVO saveAtchFileList(HttpServletRequest req) {
+	      
+	      String uploadPath = UPLOAD_DIR;
+	      File uploadDir = new File(uploadPath);
+	      
+	      if(!uploadDir.exists()) { // 업로드 경로가 존재하지 않으면...
+	         uploadDir.mkdir();
+	      }
+	      
+	      AtchFileVO atchFileVO = null;
+	      
+	      try {
+	         String fileName = "";
+	         
+	         boolean isFirstFile = true; // 첫번째 파일 여부 체크용
+	         
+	         for(Part part : req.getParts()) {
+	            fileName = getFileName(part); // 파일명 추출
+	            
+	            if(fileName != null && !fileName.equals("")) {
+	               
+	               if(isFirstFile) { // 첫번째 파일정보에 접근하기
+	                  isFirstFile = false;
+	                  
+	                  // 파일 기본정보 저장하기
+	                  atchFileVO = new AtchFileVO();
+	                  
+	                  // 기본 첨부파일 정보 저장(VO에 atchFileId가 저장됨)
+	                  fileDao.insertAtchFile(smc, atchFileVO);
+	               }
+	               
+	               String orignFileName =  fileName; // 원본파일명
+	               long fileSize = part.getSize(); // 파일 사이즈
+	               String saveFileName = ""; // 저장 파일명
+	               String saveFilePath = ""; // 저장 파일경로
+	               File storeFile = null; // 저장 파일객체
+	               
+	               // 확장명 추추출
+	               String fileExtension = orignFileName.lastIndexOf(".") < 0 ? "" 
+	            		   : orignFileName.substring(orignFileName.lastIndexOf(".") + 1);
+	               
+	               do {
+	                  saveFileName = UUID.randomUUID().toString().replace("-", "");
+	                  saveFilePath = uploadPath + File.separator +saveFileName + "." + fileExtension;
+	                  System.out.println("저장파일경로 : " + saveFilePath);
+	                  storeFile = new File(saveFilePath);
+	               }while(storeFile.exists()); // 
+	               
+	               
+	               part.write(saveFilePath); // 업로드 파일 저장
+	               
+	               atchFileVO.setStreFileNm(saveFileName);
+	               atchFileVO.setFileSize(fileSize);
+	               atchFileVO.setOrignlFileNm(orignFileName);
+	               atchFileVO.setFileStreCours(saveFilePath);               
+	               atchFileVO.setFileExtsn(fileExtension);
+	               
+	               // 파일 세부정보 저장
+	               fileDao.insertAtchFileDetail(smc, atchFileVO);
+	               
+	               part.delete(); // 임시 저장 업로드 파일 삭제
+	               
+	               System.out.println("파일명 : " + fileName + " 업로드 완료!!!");
+	               
+	            }
+	            
+	         }
+	         
+	      }catch(Exception ex) {
+	         ex.printStackTrace();
+	      }
+	      
+	      return atchFileVO;
+	   }
+
+	
+	/**
+	 * Part 객체를 파싱하여 파일이름 추출하기
+	 * @param part
+	 * @return 파일명: 파일명이 존재하지 않으면 널값 리턴함(폼필드인 경우)
+	 */
+	private String getFileName(Part part) {
+		
+			for(String content : part.getHeader("Content-Disposition")
+									.split(";")) {
+				if(content.trim().startsWith("filename")) {
+					return content.substring(content.indexOf("=") + 1)
+							.trim().replace("\"", "");
+				}
+			}
+			return null;  // filename 이 없는경우..(폼필드)
+	}
+
+	@Override
+	public AtchFileVO getAtchFileList(AtchFileVO atchFileVO) {
+		
+		return fileDao.getAtchFileList(smc, atchFileVO);
+	}
+
+	@Override
+	public AtchFileVO getAtchFileDetail(AtchFileVO atchFileVO) {
+
+		return fileDao.getAtchFileDetail(smc, atchFileVO);
+	}
+
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="payment">
+<insert id="insertPay" parameterClass="pay.vo.PayVO">
+
+	insert into PAYMENT (PAY_ID,PAY_DATE,PAY_SUC,MERCHANT_UID,MEM_HP,MEM_NAME,PG_PROVIDER)
+	values (#payId#,SYSDATE, #paySuc#,#merchantUid#,#memHp#,#memName#,#pgProvider#) <!-- iBatis가 알아서 mv.getMemId 호출함 -->
+
+</insert>
+
+<resultMap class="PayVO" id="payMap">
+
+	<result property="payId" column="PAY_ID"/>
+	<result property="payDate" column="PAY_DATE"/>
+	<result property="paySuc" column="PAY_SUC"/>
+	<result property="merchantUid" column="MERCHANT_UID"/>
+	<result property="memHp" column="MEM_HP"/>
+	<result property="memName" column="MEM_NAME"/>
+	<result property="pgProvider" column="PG_PROVIDER"/>
+	
+</resultMap>
+
+<select id="getPayAll" resultMap="payMap">
+	select  *
+	from PAYMENT
+</select>
+
+<select id="getPay" parameterClass="String" resultMap="payMap"> 
+<!-- parameterClass생략가능 -->
+
+	select *
+	from PAYMENT
+	where PAY_ID = #payId#
+
+</select>
+
+<select id="checkPay" parameterClass="String" resultClass="int">
+
+	select count(*) as cnt
+	from PAYMENT
+	where PAY_ID = #payId#
+
+</select>
+
+<select id="searchPay" parameterClass="payVO" resultMap="payMap">
+
+	select * from PAYMENT where 1=1 
+
+<isNotEmpty property="payId">
+	and PAY_ID = #payId#
+</isNotEmpty>
+
+</select>
+
+</sqlMap>			
+
+

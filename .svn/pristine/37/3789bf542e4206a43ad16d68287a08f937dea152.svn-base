@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="notice">			
+
+	<insert id="insertNotice" parameterClass="noticeVO">
+		insert into notice (notice_num,
+							admin_id,
+							notice_date,
+							notice_title,
+							notice_content)
+		values (notice_num_seq.nextval, 'admin', sysdate, #noticeTitle#, #noticeContent#)
+	</insert>
+	
+	<update id="updateNotice" parameterClass="noticeVO">
+		update notice set notice_title=#noticeTitle#, notice_content=#noticeContent# where notice_num=#noticeNum#
+	</update>
+	
+	<delete id="deleteNotice" parameterClass="int">
+		delete from notice where notice_num=#noticeNum#
+    </delete>
+
+	<resultMap id="noticeMap" class="noticeVO">
+		<result property="noticeNum" 		column="notice_num" />
+		<result property="adminId" 			column="admin_id" />
+		<result property="noticeDate" 		column="notice_date" />
+		<result property="noticeTitle" 		column="notice_title" />
+		<result property="noticeContent" 	column="notice_content" />
+	</resultMap>
+	
+	<select id="getNoticeAll" resultMap="noticeMap">
+		select * from notice order by 1 desc
+	</select>
+	
+	<select id="getNotice" parameterClass="int" resultMap="noticeMap">
+		select * from notice where notice_num=#noticeNum#
+	</select>
+	
+	<select id="countNoticeList" resultClass="int">
+		select count(*) from notice
+	</select>
+	
+	<select id="noticeList" resultClass="noticeVO" parameterClass="map">
+		select a.* from (
+			select rownum as rnum, b.* from (
+				select * from notice order by num desc
+				) b
+		<![CDATA[
+			 where rownum <= #end#	
+		)a    
+		where a.rnum >= #start#		
+		]]>
+	</select>
+
+</sqlMap>			
+
+
+
+
+

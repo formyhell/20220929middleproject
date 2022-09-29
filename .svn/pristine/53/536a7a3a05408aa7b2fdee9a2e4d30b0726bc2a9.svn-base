@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="post">			
+
+	<insert id="insertPost" parameterClass="PostVO">
+		insert into job_posting (job_no,
+						job_title,
+						job_content) 
+		values (post_no_seq.nextval, #postTitle#, #postContent#)
+	</insert>
+	
+	<update id="updatePost" parameterClass="PostVO">
+		update job_posting set job_title=#postTitle#, job_content=#postContent# where job_no=#postNo#
+	</update>
+	
+	<delete id="deletePost" parameterClass="int">
+		delete from job_posting where job_no=#postNo#
+    </delete>
+
+	<resultMap id="postMap" class="postVO">
+		<result property="postNo" 		column="job_no" />
+		<result property="postTitle" 	column="job_title" />
+		<result property="postContent" 	column="job_content" />
+	</resultMap>
+	
+	<select id="getPostAll" resultMap="postMap">
+		select * from job_posting order by 1 desc
+	</select>
+	
+	<select id="getPost" parameterClass="int" resultMap="postMap">
+		select * from job_posting where job_no = #postNo#
+	</select>
+		
+	<select id="searchPost" parameterClass="postVO" resultMap="postMap">
+		select * from job_posting 
+			where job_title like '%' || #postTitle# || '%'
+				or job_content like '%' || #postContent# || '%' 
+	
+	</select>
+
+</sqlMap>			
+
+
+
+
+

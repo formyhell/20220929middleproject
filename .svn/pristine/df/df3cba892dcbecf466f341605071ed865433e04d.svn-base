@@ -1,0 +1,120 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	String errMsg = (String)session.getAttribute("errMsg");
+	if(errMsg == null) {
+		errMsg = "";
+	}
+
+%> 
+    
+   
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<%@ include file="../../header.jsp" %>
+
+<div class="banner text-center">
+  <h3>MY PAGE</h3>
+  <p>마이 페이지 입니다. 내 글을 모아보거나 회원 정보를 관리할 수 있어요!</p>
+</div>
+
+<div class="container-fluid text-center">
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <p><a href="<%=request.getContextPath() %>/MylectureList.do">수강신청 목록</a></p>
+      <p><a href="<%=request.getContextPath() %>/MypagemodifyView.do">회원 정보 수정</a></p>
+      <p><a href="<%=request.getContextPath() %>/DeleteformView.do">회원 탈퇴</a></p>
+    </div>
+    <div class="col-sm-8 text-left"> 
+      <h1>회원 정보 수정 페이지</h1>
+      <p>정보를 수정해봅시다. 비밀번호만 수정할 수 있지만..(나중에 비밀번호 변경으로 메뉴이름 그냥 바꾸는게 나을듯ㅇ)</p>
+      <hr>
+      <h3>Test</h3>
+      <p>Lorem ipsum...</p>
+      
+      
+      <form action="<%=request.getContextPath() %>/memberupdate.do" method="post">
+      
+      <table>
+      	<tr>
+      		<td>기존 비밀번호 입력</td>
+			<td><input type="password" name="memPw" class="pw" id="pw1">
+			</td>
+		</tr>
+		<tr>
+			<td>새 비밀번호 입력</td>
+			<td><input type="password" name="memNewPw" class="pw" id="newPw"></td>
+		</tr>
+		<tr>
+			<td>새 비밀번호 입력 확인</td>
+			<td><input type="password" name="memNewPw" class="pw" id="newPw"></td>
+		</tr>
+		
+		<tr>
+			<td colspan="2" align="center">
+			<input type="submit" value="확인" class="btn btn-primary" id="pwOk"/>
+			</td>
+		</tr>
+      </table>
+      
+      </form>
+      
+      <div id="errMsg" style="color:red"><%=errMsg %></div>
+      
+    </div>
+    
+<script>
+	
+		$('#pwOk').click(function(e) {
+			
+			e.preventDefault(); // 폼 전송을 안한다?
+
+			let memPw = $('#pw1').val();
+			let memNewPw = $('#newPw').val();
+			$.ajax({
+				type : "POST",
+				url : "<%=request.getContextPath() %>/memberupdate.do",
+				data : "memPw=" + memPw + "&memNewPw=" + memNewPw,
+				dataType : "json",
+				success : function(data, textStatus, xhr) {
+					
+					console.log(data);
+					
+					if (data.result == 'fail') {
+						
+						$("#errMsg").text("비밀번호가 올바르지 않습니다.");
+						
+					} else {
+						console.log("비밀번호가 일치하여 새로운 비번으로 변경하였습니다!")
+						window.location.href = "<%=request.getContextPath() %>/index.do";
+					} 
+				}, error : function(data, textStatus, xhr) {
+					console.log("에러가 났어요.");
+				}
+			})
+		});
+	</script>
+    
+    
+    <div class="col-sm-2 sidenav">
+      <div class="well">
+        <p>ADS수정</p>
+      </div>
+      <div class="well">
+        <p>ADS</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%@ include file="../../footer.jsp" %>
+
+</body>
+</html>

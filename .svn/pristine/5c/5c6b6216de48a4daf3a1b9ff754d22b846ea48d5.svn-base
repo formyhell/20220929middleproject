@@ -1,0 +1,64 @@
+<%@page import="member.vo.MemberVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	List<MemberVO> memList = (List<MemberVO>)request.getAttribute("memList");
+
+	String msg = session.getAttribute("msg") == null ? "" : (String) session.getAttribute("msg");
+	session.removeAttribute("msg"); // 꺼내온 메시지 속성 제거하기
+	
+	// 알림창 뜨면서 삭제 처리된다.
+
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원목록</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>이메일 주소</th>
+			<th>비밀번호 </th>
+			 <!-- 표의 맨 윗줄 제목을 나타내는 역할이다. 열이 4개임을 알 수 있다.-->
+		</tr>
+	<% 
+		int memSize = memList.size();
+		if(memSize > 0) {
+			for(int i=0 ; i<memSize; i++) {
+	%>	
+		<tr>
+			<!-- <td><%//out.print(memList.get(i).getMemId()); %></td> -->
+			<td><%=memList.get(i).getMemMail() %></td>
+			<td><a href="detail.do?memId=<%=memList.get(i).getMemMail() %>"><%=memList.get(i).getMemMail() %></a></td>
+			<td><%=memList.get(i).getMemPw() %></td>
+		</tr> <!--  for문이 반복되므로, 한 행을 채울 때마다 </tr>로 닫아준다.-->
+	<% 
+			}
+		}else{
+	%>
+		<tr>
+			<td colspan="4">회원정보가 없습니다.</td> <!-- 4개 열 합쳐서 회원 정보가 없다고 띄워준다. -->
+		</tr>		
+	<% 	}%> 
+	<tr align="center">
+		<td colspan="5"><a href="insert.do">[회원 등록]</a></td> <!--  = ./insert.do 랑 똑같음--> 
+	</tr>
+
+	</table>
+	
+<% if(msg.equals("성공")) { %>
+	<script>
+		alert('정상적으로 처리되었습니다.');
+	</script>
+	
+<% }%>
+
+
+
+
+</body>
+</html>

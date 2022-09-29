@@ -1,0 +1,106 @@
+package lecture.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import lecture.file.service.IAtchFileService;
+import lecture.file.service.IAtchFileServiceImpl;
+import lecture.file.vo.AtchFileVO;
+import lecture.service.ILectureService;
+import lecture.service.LectureServiceImpl;
+import lecture.vo.LectureVO;
+
+
+@WebServlet("/lecture/update.do")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 3,
+maxFileSize = 1024 * 1024 * 40, maxRequestSize = 1024 * 1024 * 50)
+public class updateLectureController extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String lecId = req.getParameter("lecId");
+		
+		// 1. 서비스 객체 생성하기
+		ILectureService lecService = LectureServiceImpl.getinstance();
+		IAtchFileService fileService = IAtchFileServiceImpl.getInstance();
+		
+		// 2. 회원정보 조회
+		LectureVO lv = lecService.getLecture(lecId);
+		
+		if(lv.getAtchFileId() > 0) { // 첨부파일 존재하는 경우..
+			// 2-1. 첨부파일 목록 조회
+			AtchFileVO fileVO = new AtchFileVO();
+			fileVO.setAtchFileId(lv.getAtchFileId());
+			
+			List<AtchFileVO> atchFileList = fileService.getAtchFileList(fileVO);
+			
+			req.setAttribute("atchFileList", atchFileList);
+		}
+		
+		
+		req.setAttribute("lv", lv);
+		
+		req.getRequestDispatcher("/WEB-INF/jsp/lecture/updateForm.jsp")
+			.forward(req, resp);
+		
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		
+		
+		// 1. 요청 파라미터 정보 가져오기
+		String lecId = req.getParameter("lecId");
+		String lecTitle = req.getParameter("lecTitle");
+		String lecIntro = req.getParameter("lecIntro");
+		
+		// 기존 첨부파일에 대한 ID값
+		long atchFileId = Long.parseLong(req.getParameter("atchFileId"));
+		
+		
+		// 2. 서비스 객체 생성하기
+		ILectureService lecService = LectureServiceImpl.getinstance();
+		IAtchFileService fileService = IAtchFileServiceImpl.getInstance();
+		
+		AtchFileVO atchFileVO = new AtchFileVO();
+		
+		//첨부파일 목록 저장(공통기능)
+		atchFileVO = fileService.saveAtchFileList(req);
+		
+		
+		// 3. 회원정보 변경
+		LectureVO lv = new LectureVO();
+		lv.setLecId(lecId);
+		lv.setLecTitle(lecTitle);
+		lv.setLecIntro(lecIntro);
+		if(atchFileVO != null) {
+			lv.setAtchFileId(atchFileVO.getAtchFileId());
+		}else {
+			lv.setAtchFileId(atchFileId);
+		}
+		
+		int cnt = lecService.updateLecture(lv);
+		
+		String msg = "";
+		
+		if(cnt > 0) {
+			msg = "성공";
+		}else {
+			msg = "실패";
+		}
+		
+		//req.getRequestDispatcher("/member/list.do").forward(req, resp);
+		
+		String redirectUrl = req.getContextPath() + "/lecture/list.do";
+		
+		resp.sendRedirect(redirectUrl);
+	}
+}
